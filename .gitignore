@@ -1,0 +1,25 @@
+# Environment files (API keys, secrets)
+.env
+.env.*
+.env.local
+
+# Secrets and credentials
+credentials.json
+config/credentials.json
+secrets/
+*.secret
+*.apikey
+*.api
+
+# Key and certificate files
+*.key
+*.pem
+*.crt
+
+# Python cache
+__pycache__/
+*.pyc
+
+# Editor and OS files
+.vscode/
+.DS_Store
