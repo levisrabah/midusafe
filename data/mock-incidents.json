@@ -1,0 +1,110 @@
+[
+  {
+    "message": "Flash floods sweeping through Garissa town, roads impassable, families trapped in homes",
+    "location_name": "Garissa, Kenya",
+    "lat": -0.45,
+    "lng": 39.6464
+  },
+  {
+    "message": "Severe drought in Turkana County, livestock dying, water sources completely dried up",
+    "location_name": "Turkana, Kenya",
+    "lat": 3.0159,
+    "lng": 34.8789
+  },
+  {
+    "message": "Lake Victoria water levels rising dangerously, flooding lakeside communities in Kisumu",
+    "location_name": "Kisumu, Kenya",
+    "lat": -0.1022,
+    "lng": 34.7617
+  },
+  {
+    "message": "Devastating landslides in Bududa district, Eastern Uganda, burying homes and farmland",
+    "location_name": "Bududa, Uganda",
+    "lat": 0.9167,
+    "lng": 34.3833
+  },
+  {
+    "message": "Coastal erosion accelerating in Mombasa, several buildings collapsed into the ocean",
+    "location_name": "Mombasa, Kenya",
+    "lat": -4.0435,
+    "lng": 39.6682
+  },
+  {
+    "message": "Unprecedented rainfall causing mudslides in Mount Kenya region, cutting off access roads",
+    "location_name": "Mount Kenya, Kenya",
+    "lat": -0.1521,
+    "lng": 37.3084
+  },
+  {
+    "message": "River Nile bursting banks in Jinja, Uganda, flooding entire neighborhoods",
+    "location_name": "Jinja, Uganda",
+    "lat": 0.4242,
+    "lng": 33.2046
+  },
+  {
+    "message": "Cyclone-like storm hitting Dar es Salaam coastline, widespread flooding reported",
+    "location_name": "Dar es Salaam, Tanzania",
+    "lat": -6.7924,
+    "lng": 39.2083
+  },
+  {
+    "message": "Severe heatwave in Northern Tanzania, temperatures reaching 42°C, crop failure imminent",
+    "location_name": "Arusha, Tanzania",
+    "lat": -3.3869,
+    "lng": 36.683
+  },
+  {
+    "message": "Flash floods in Kigali, Rwanda, landslide warnings issued for hilly regions",
+    "location_name": "Kigali, Rwanda",
+    "lat": -1.9441,
+    "lng": 30.0619
+  },
+  {
+    "message": "Lake Turkana water levels dropping to historic lows, fishing communities devastated",
+    "location_name": "Lake Turkana, Kenya",
+    "lat": 3.6,
+    "lng": 36.0
+  },
+  {
+    "message": "Severe flooding in South Sudan's capital Juba, Nile tributaries overflowing",
+    "location_name": "Juba, South Sudan",
+    "lat": 4.8594,
+    "lng": 31.5713
+  },
+  {
+    "message": "Drought emergency in Somalia's Gedo region, livestock mortality rates at 80%",
+    "location_name": "Gedo Region, Somalia",
+    "lat": 3.0,
+    "lng": 42.0
+  },
+  {
+    "message": "Coastal flooding in Zanzibar Stone Town, historic buildings underwater",
+    "location_name": "Zanzibar, Tanzania",
+    "lat": -6.1659,
+    "lng": 39.2026
+  },
+  {
+    "message": "Unusual flooding in Nairobi's Mathare slum, hundreds displaced overnight",
+    "location_name": "Nairobi, Kenya",
+    "lat": -1.2921,
+    "lng": 36.8219
+  },
+  {
+    "message": "Waterborne disease outbreak in Bujumbura after severe flooding, medical emergency declared",
+    "location_name": "Bujumbura, Burundi",
+    "lat": -3.3833,
+    "lng": 29.3667
+  },
+  {
+    "message": "Crop failure in Uganda's Karamoja region due to prolonged drought, food security crisis",
+    "location_name": "Karamoja, Uganda",
+    "lat": 2.5,
+    "lng": 34.0
+  },
+  {
+    "message": "Storm surge hitting Kenya's Lamu Archipelago, entire islands temporarily submerged",
+    "location_name": "Lamu, Kenya",
+    "lat": -2.2717,
+    "lng": 40.902
+  }
+]

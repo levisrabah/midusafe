@@ -1,56 +1,83 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
-import { MapContainer, TileLayer, Marker, Popup, useMap } from 'react-leaflet';
+import { useEffect, useRef, useState } from 'react';
+import dynamic from 'next/dynamic';
 import { motion } from 'framer-motion';
 import { AlertTriangle } from 'lucide-react';
-import L from 'leaflet';
 import { Alert } from '@/types/alert';
 
-// Fix for default markers in react-leaflet
-delete (L.Icon.Default.prototype as any)._getIconUrl;
-L.Icon.Default.mergeOptions({
-  iconRetinaUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/images/marker-icon-2x.png',
-  iconUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/images/marker-icon.png',
-  shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/images/marker-shadow.png',
-});
+// Dynamically import react-leaflet components to avoid SSR issues
+const MapContainer = dynamic(
+  () => import('react-leaflet').then((mod) => mod.MapContainer),
+  { ssr: false }
+);
 
-// Custom emergency marker icon
-const emergencyIcon = L.divIcon({
-  html: `<div class="emergency-marker">
-    <div class="pulse-ring"></div>
-    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <path d="M12 2L2 7L12 12L22 7L12 2Z" fill="#ef4444" stroke="#fff" stroke-width="2"/>
-      <path d="M2 17L12 22L22 17" fill="#ef4444" stroke="#fff" stroke-width="2"/>
-      <path d="M2 12L12 17L22 12" fill="#ef4444" stroke="#fff" stroke-width="2"/>
-    </svg>
-  </div>`,
-  className: 'custom-emergency-marker',
-  iconSize: [32, 32],
-  iconAnchor: [16, 32],
-});
+const TileLayer = dynamic(
+  () => import('react-leaflet').then((mod) => mod.TileLayer),
+  { ssr: false }
+);
 
-// Component to handle map auto-pan
-function MapController({ alerts }: { alerts: Alert[] }) {
-  const map = useMap();
-  
-  useEffect(() => {
-    if (alerts.length > 0) {
-      const latestAlert = alerts[0];
-      if (latestAlert.location?.lat && latestAlert.location?.lng) {
-        map.setView([latestAlert.location.lat, latestAlert.location.lng], 10, {
-          animate: true,
-          duration: 1.5,
-        });
-      }
-    }
-  }, [alerts, map]);
-  
-  return null;
-}
+const Marker = dynamic(
+  () => import('react-leaflet').then((mod) => mod.Marker),
+  { ssr: false }
+);
+
+const Popup = dynamic(
+  () => import('react-leaflet').then((mod) => mod.Popup),
+  { ssr: false }
+);
+
+// Create a separate component for the map controller that will be dynamically imported
+const MapController: any = dynamic(
+  () => import('./map-controller').then((mod: any) => ({ default: mod.default })),
+  { ssr: false }
+);
 
 export default function InteractiveMapLeaflet({ alerts }: { alerts: Alert[] }) {
-  const mapRef = useRef<L.Map>(null);
+  const [isClient, setIsClient] = useState(false);
+  const [L, setL] = useState<any>(null);
+  const [emergencyIcon, setEmergencyIcon] = useState<any>(null);
+
+  useEffect(() => {
+    setIsClient(true);
+    
+    // Import Leaflet only on client side
+    import('leaflet').then((leaflet) => {
+      setL(leaflet);
+      
+      // Fix for default markers in react-leaflet
+      delete (leaflet.Icon.Default.prototype as any)._getIconUrl;
+      leaflet.Icon.Default.mergeOptions({
+        iconRetinaUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/images/marker-icon-2x.png',
+        iconUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/images/marker-icon.png',
+        shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/images/marker-shadow.png',
+      });
+      
+      // Custom emergency marker icon
+      const icon = leaflet.divIcon({
+        html: `<div class="emergency-marker">
+          <div class="pulse-ring"></div>
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M12 2L2 7L12 12L22 7L12 2Z" fill="#ef4444" stroke="#fff" stroke-width="2"/>
+            <path d="M2 17L12 22L22 17" fill="#ef4444" stroke="#fff" stroke-width="2"/>
+            <path d="M2 12L12 17L22 12" fill="#ef4444" stroke="#fff" stroke-width="2"/>
+          </svg>
+        </div>`,
+        className: 'custom-emergency-marker',
+        iconSize: [32, 32],
+        iconAnchor: [16, 32],
+      });
+      setEmergencyIcon(icon);
+    });
+  }, []);
+
+  if (!isClient || !L || !emergencyIcon) {
+    return (
+      <div className="h-full w-full rounded-lg overflow-hidden border border-zinc-800 bg-zinc-950 flex items-center justify-center">
+        <div className="text-zinc-400">Loading map...</div>
+      </div>
+    );
+  }
 
   return (
     <>
@@ -104,7 +131,6 @@ export default function InteractiveMapLeaflet({ alerts }: { alerts: Alert[] }) {
       
       <div className="h-full w-full rounded-lg overflow-hidden border border-zinc-800">
         <MapContainer
-          ref={mapRef}
           center={[0, 0]}
           zoom={2}
           style={{ height: '100%', width: '100%' }}

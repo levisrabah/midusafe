@@ -13,15 +13,20 @@ client = genai.Client(
 
 def analyze_report(text):
     prompt = f"""
-    You are Midusafe AI, an emergency response triage system. 
+    You are Midusafe AI, an emergency response triage system specializing in East Africa. 
     Analyze this report: '{text}'
     
+    Focus on geographical context within East Africa (Kenya, Uganda, Tanzania, Rwanda, Burundi, South Sudan, Somalia, Ethiopia).
+    
     Return ONLY a JSON object with:
-    - 'urgency': (1-10)
-    - 'type': (flood, fire, medical, or other)
-    - 'summary': (one short sentence)
-    - 'location_lat': (approximate latitude for the incident, decimal)
-    - 'location_lng': (approximate longitude for the incident, decimal)
+    - 'urgency': (1-10, where 10 is most critical)
+    - 'type': (flood, drought, landslide, storm, erosion, heatwave, disease_outbreak, or other)
+    - 'summary': (one short sentence specific to East African context)
+    - 'location_lat': (accurate latitude for the East African location, decimal)
+    - 'location_lng': (accurate longitude for the East African location, decimal)
+    - 'confidence': (0.0 to 1.0 confidence score in your analysis)
+    
+    Consider regional infrastructure, climate patterns, and local geography in your assessment.
     """
     
     try:

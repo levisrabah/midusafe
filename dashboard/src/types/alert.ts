@@ -12,6 +12,7 @@ export interface Alert {
   };
   summary: string;
   timestamp: string;
+  confidence: number; // 0.0-1.0
   message?: string;
   analysis?: any;
 }

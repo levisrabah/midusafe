@@ -31,6 +31,8 @@
   --color-emergency-red: #ef4444;
   --color-growth-green: #10b981;
   --color-alert-amber: #f59e0b;
+  --color-emerald: #10b981;
+  --color-rose: #f43f5e;
 }
 
 :root {

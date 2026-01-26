@@ -40,6 +40,8 @@ alerts_db = []
 class IncidentReport(BaseModel):
     message: str
     location: str = "Nairobi, Kenya" # Default for the hackathon context
+    lat: float = None
+    lng: float = None
 
 # --- 3. Helper: Clean LLM Output ---
 def clean_json_string(raw_string):
@@ -70,11 +72,12 @@ async def create_report(report: IncidentReport):
             "message": report.message,
             "analysis": ai_data,
             "location": {
-                "lat": ai_data.get("location_lat", 0.0),
-                "lng": ai_data.get("location_lng", 0.0)
+                "lat": report.lat if report.lat is not None else ai_data.get("location_lat", 0.0),
+                "lng": report.lng if report.lng is not None else ai_data.get("location_lng", 0.0)
             },
             "disaster_type": ai_data.get("type", "other"),
             "urgency": ai_data.get("urgency", 5),
+            "confidence": ai_data.get("confidence", 0.8),
             "summary": ai_data.get("summary", "Emergency report received"),
             "timestamp": "Just now"
         }

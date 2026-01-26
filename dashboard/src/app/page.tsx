@@ -1,17 +1,37 @@
 'use client';
 
+import { useEffect } from 'react';
 import { useWebSocket } from '@/hooks/use-web-socket';
+import { useAlerts } from '@/hooks/use-alerts';
 import { Alert } from '@/types/alert';
 import ClimateStatsBar from '@/components/dashboard/climate-stats-bar';
 import InteractiveMapLeaflet from '@/components/dashboard/interactive-map-leaflet';
 import LiveFeed from '@/components/dashboard/live-feed';
 import SimulateButton from '@/components/dashboard/simulate-button';
 import LiveHeaderTicker from '@/components/dashboard/live-header-ticker';
+import SystemStatus from '@/components/dashboard/system-status';
+import ToastContainer from '@/components/ui/toast';
 
 const WS_URL = 'ws://localhost:8000/ws/alerts';
 
 export default function DashboardPage() {
-  const alerts = useWebSocket<Alert>(WS_URL);
+  const wsAlerts = useWebSocket<Alert>(WS_URL);
+  const { 
+    alerts, 
+    addAlert, 
+    toasts, 
+    removeToast, 
+    systemStatus 
+  } = useAlerts();
+
+  // Sync WebSocket alerts with global state
+  useEffect(() => {
+    if (wsAlerts.length > alerts.length) {
+      // New alerts received via WebSocket
+      const newAlerts = wsAlerts.slice(0, wsAlerts.length - alerts.length);
+      newAlerts.forEach(alert => addAlert(alert));
+    }
+  }, [wsAlerts, alerts.length, addAlert]);
 
   return (
     <main className="relative h-screen w-screen overflow-hidden bg-zinc-950 font-sans">
@@ -23,6 +43,9 @@ export default function DashboardPage() {
         }}
       />
       
+      {/* Toast Notifications */}
+      <ToastContainer toasts={toasts} onRemove={removeToast} />
+      
       {/* Live Header Ticker */}
       <LiveHeaderTicker />
       
@@ -31,9 +54,13 @@ export default function DashboardPage() {
       
       {/* Main Content */}
       <div className="grid h-full grid-cols-12 gap-4 p-4 pt-32">
-        {/* Live Feed Sidebar */}
-        <div className="col-span-4 h-full overflow-hidden">
-          <div className="h-full glass-sidebar rounded-lg">
+        {/* Left Sidebar - System Status & Live Feed */}
+        <div className="col-span-4 h-full overflow-hidden space-y-4">
+          <SystemStatus 
+            aiBackend={systemStatus.aiBackend}
+            liveFeed={systemStatus.liveFeed}
+          />
+          <div className="h-full glass-sidebar rounded-lg flex-1">
             <LiveFeed alerts={alerts} />
           </div>
         </div>

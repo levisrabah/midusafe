@@ -23,6 +23,7 @@ export function useWebSocket<T>(url: string) {
           location: message.location || { lat: 0, lng: 0 },
           summary: message.summary || 'Emergency report received',
           timestamp: message.timestamp || new Date().toISOString(),
+          confidence: message.confidence || 0.8,
           message: message.message,
           analysis: message.analysis,
         };
