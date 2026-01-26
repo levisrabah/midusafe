@@ -69,7 +69,13 @@ async def create_report(report: IncidentReport):
             "id": str(uuid.uuid4()),
             "message": report.message,
             "analysis": ai_data,
-            "location": report.location,
+            "location": {
+                "lat": ai_data.get("location_lat", 0.0),
+                "lng": ai_data.get("location_lng", 0.0)
+            },
+            "disaster_type": ai_data.get("type", "other"),
+            "urgency": ai_data.get("urgency", 5),
+            "summary": ai_data.get("summary", "Emergency report received"),
             "timestamp": "Just now"
         }
         

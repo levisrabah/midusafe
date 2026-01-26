@@ -25,21 +25,28 @@ const stats = [
 
 export default function ClimateStatsBar() {
   return (
-    <div className="fixed top-0 left-0 right-0 z-10 flex h-16 items-center border-b border-white/10 bg-card/50 px-4 backdrop-blur-sm">
-      <div className="flex items-center gap-2">
-        <div className="h-3 w-3 animate-pulse rounded-full bg-emergency-red" />
-        <p className="font-semibold text-red-500">Live</p>
-      </div>
-      <div className="flex flex-1 justify-center gap-12">
-        {stats.map((stat) => (
-          <div key={stat.name} className="flex items-center gap-3">
-            {stat.icon}
-            <div>
-              <p className="text-xs text-muted-foreground">{stat.name}</p>
-              <p className="text-sm font-bold">{stat.value}</p>
+    <div className="fixed top-16 left-0 right-0 z-40 glass-morphism border-b border-zinc-800 px-4">
+      <div className="flex items-center justify-between py-3">
+        <div className="flex items-center gap-2">
+          <div className="h-3 w-3 rounded-full bg-emergency-red pulse-dot" />
+          <p className="font-semibold text-emergency-red">SYSTEM ACTIVE</p>
+        </div>
+        
+        <div className="flex gap-8">
+          {stats.map((stat) => (
+            <div key={stat.name} className="flex items-center gap-3">
+              {stat.icon}
+              <div>
+                <p className="text-xs text-zinc-400">{stat.name}</p>
+                <p className="text-sm font-bold text-foreground">{stat.value}</p>
+              </div>
             </div>
-          </div>
-        ))}
+          ))}
+        </div>
+        
+        <div className="text-xs text-zinc-500">
+          MIDUSAFE v2.0 | UN Disaster Response
+        </div>
       </div>
     </div>
   );

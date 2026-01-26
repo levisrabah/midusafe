@@ -20,6 +20,8 @@ def analyze_report(text):
     - 'urgency': (1-10)
     - 'type': (flood, fire, medical, or other)
     - 'summary': (one short sentence)
+    - 'location_lat': (approximate latitude for the incident, decimal)
+    - 'location_lng': (approximate longitude for the incident, decimal)
     """
     
     try:

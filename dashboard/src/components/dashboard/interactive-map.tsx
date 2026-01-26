@@ -1,21 +1,35 @@
 'use client';
 
 import { useMemo } from 'react';
-import Map, { Layer, Source } from 'react-map-gl';
-import type { LayerProps } from 'react-map-gl';
+import { Map, Layer, Source } from 'react-map-gl/mapbox';
+import type { LayerProps } from 'react-map-gl/mapbox';
 import { Alert } from '@/types/alert';
 
-const MAPBOX_TOKEN =
-  process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN ||
-  'pk.eyJ1IjoiZXhhbXBsZXMiLCJpZCI6ImNqYWx5b3k2MDB4cGUzM215enIzb25qZ3kifQ.uM4f-2qA1dO2a294F4I2fA'; // Add your Mapbox token here
+const MAPBOX_TOKEN = process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN;
 
 const heatmapLayer: LayerProps = {
   id: 'heatmap',
-  maxzoom: 9,
   type: 'heatmap',
+  maxzoom: 9,
   paint: {
-    'heatmap-weight': ['interpolate', ['linear'], ['get', 'urgency'], 0, 0, 100, 1],
-    'heatmap-intensity': ['interpolate', ['linear'], ['zoom'], 0, 1, 9, 3],
+    'heatmap-weight': [
+      'interpolate',
+      ['linear'],
+      ['get', 'urgency'],
+      0,
+      0,
+      100,
+      1,
+    ],
+    'heatmap-intensity': [
+      'interpolate',
+      ['linear'],
+      ['zoom'],
+      0,
+      1,
+      9,
+      3,
+    ],
     'heatmap-color': [
       'interpolate',
       ['linear'],
@@ -31,27 +45,61 @@ const heatmapLayer: LayerProps = {
       1,
       'rgb(255, 77, 77)',
     ],
-    'heatmap-radius': ['interpolate', ['linear'], ['zoom'], 0, 2, 9, 20],
-    'heatmap-opacity': ['interpolate', ['linear'], ['zoom'], 7, 1, 9, 0],
+    'heatmap-radius': [
+      'interpolate',
+      ['linear'],
+      ['zoom'],
+      0,
+      2,
+      9,
+      20,
+    ],
+    'heatmap-opacity': [
+      'interpolate',
+      ['linear'],
+      ['zoom'],
+      7,
+      1,
+      9,
+      0,
+    ],
   },
 };
 
-export default function InteractiveMap({ alerts }: { alerts: Alert[] }) {
-  const geojsonData = useMemo(() => {
-    return {
+export default function InteractiveMap({
+  alerts,
+}: {
+  alerts: Alert[];
+}) {
+  // ✅ Always call hooks first
+  const geojsonData = useMemo(
+    () => ({
       type: 'FeatureCollection' as const,
       features: alerts.map((alert) => ({
         type: 'Feature' as const,
         geometry: {
           type: 'Point' as const,
-          coordinates: [alert.location.lng, alert.location.lat],
+          coordinates: [
+            alert.location.lng,
+            alert.location.lat,
+          ],
         },
         properties: {
           urgency: alert.urgency,
         },
       })),
-    };
-  }, [alerts]);
+    }),
+    [alerts]
+  );
+
+  // ✅ Conditional rendering AFTER hooks
+  if (!MAPBOX_TOKEN) {
+    return (
+      <div className="flex h-full w-full items-center justify-center text-sm text-red-500">
+        Mapbox access token is not configured.
+      </div>
+    );
+  }
 
   return (
     <Map

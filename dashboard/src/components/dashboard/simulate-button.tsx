@@ -34,12 +34,12 @@ export default function SimulateButton() {
     <button
       onClick={() => mutation.mutate()}
       disabled={mutation.isPending}
-      className="fixed bottom-4 right-4 z-10 flex h-14 w-14 items-center justify-center rounded-full bg-primary text-primary-foreground shadow-lg transition-transform hover:scale-110 active:scale-100"
+      className="fixed bottom-6 right-6 z-50 flex h-16 w-16 items-center justify-center rounded-full glass-morphism border border-zinc-700 text-emergency-red shadow-2xl transition-all hover:scale-110 hover:border-emergency-red/50 active:scale-100"
     >
       {mutation.isPending ? (
-        <Loader2 className="h-6 w-6 animate-spin" />
+        <Loader2 className="h-8 w-8 animate-spin" />
       ) : (
-        <Bot className="h-6 w-6" />
+        <Bot className="h-8 w-8" />
       )}
     </button>
   );

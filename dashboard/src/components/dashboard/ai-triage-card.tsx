@@ -2,6 +2,7 @@ import { Alert, DisasterType } from '@/types/alert';
 import { motion } from 'framer-motion';
 import { Flame, Waves, Zap, Wind, Mountain } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
+import AIAnalysis from './ai-analysis';
 
 const disasterIcons: Record<DisasterType, React.ReactElement> = {
   Wildfire: <Flame className="h-5 w-5" />,
@@ -12,9 +13,9 @@ const disasterIcons: Record<DisasterType, React.ReactElement> = {
 };
 
 const UrgencyIndicator = ({ urgency }: { urgency: number }) => {
-  const color = urgency > 80 ? 'text-emergency-red' : urgency > 50 ? 'text-alert-amber' : 'text-growth-green';
+  const color = urgency > 8 ? 'text-emergency-red' : urgency > 5 ? 'text-alert-amber' : 'text-growth-green';
   const circumference = 2 * Math.PI * 18;
-  const strokeDashoffset = circumference - (urgency / 100) * circumference;
+  const strokeDashoffset = circumference - (urgency / 10) * circumference;
 
   return (
     <div className={`relative h-12 w-12 font-bold ${color}`}>
@@ -53,25 +54,24 @@ export default function AiTriageCard({ alert }: { alert: Alert }) {
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: -20 }}
       transition={{ duration: 0.5 }}
-      className="mb-4 rounded-lg border border-white/10 bg-card/50 p-4 shadow-lg backdrop-blur-lg"
+      className="mb-4 glass-card rounded-lg p-4 shadow-lg"
     >
       <div className="flex items-start justify-between">
         <div className="flex items-center gap-4">
           <UrgencyIndicator urgency={alert.urgency} />
           <div>
-            <Badge variant="destructive" className="flex items-center gap-2">
+            <Badge variant="destructive" className="flex items-center gap-2 bg-emergency-red hover:bg-emergency-red/90">
               {disasterIcons[alert.disaster_type]}
               <span className="font-semibold">{alert.disaster_type}</span>
             </Badge>
-            <p className="mt-1 text-xs text-muted-foreground">{new Date(alert.timestamp).toLocaleString()}</p>
+            <p className="mt-1 text-xs text-zinc-400">{new Date(alert.timestamp).toLocaleString()}</p>
           </div>
         </div>
       </div>
-      <div className="mt-4">
-        <h3 className="font-semibold">Gemini Smart Summary</h3>
-        <p className="mt-1 text-sm text-foreground/80">{alert.summary}</p>
-      </div>
+      
+      <AIAnalysis summary={alert.summary} urgency={alert.urgency} />
     </motion.div>
   );
 }
