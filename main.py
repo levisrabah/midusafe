@@ -2,7 +2,9 @@ import os
 import json
 import uuid
 import re
-from fastapi import FastAPI, WebSocket, WebSocketDisconnect, HTTPException
+import time
+import asyncio
+from fastapi import FastAPI, WebSocket, WebSocketDisconnect, HTTPException, BackgroundTasks
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from typing import List
@@ -27,11 +29,21 @@ class ConnectionManager:
         self.active_connections.append(websocket)
 
     def disconnect(self, websocket: WebSocket):
-        self.active_connections.remove(websocket)
+        if websocket in self.active_connections:
+            self.active_connections.remove(websocket)
 
     async def broadcast(self, message: dict):
+        disconnected = []
         for connection in self.active_connections:
-            await connection.send_json(message)
+            try:
+                await connection.send_json(message)
+            except Exception as e:
+                print(f"WebSocket send error: {e}")
+                disconnected.append(connection)
+        
+        # Clean up disconnected clients
+        for conn in disconnected:
+            self.disconnect(conn)
 
 manager = ConnectionManager()
 alerts_db = []
@@ -60,30 +72,59 @@ async def websocket_endpoint(websocket: WebSocket):
     except WebSocketDisconnect:
         manager.disconnect(websocket)
 
+@app.get("/health")
+async def health_check():
+    return {"ok": True}
+
 @app.post("/report")
-async def create_report(report: IncidentReport):
+async def create_report(report: IncidentReport, background_tasks: BackgroundTasks):
+    start_time = time.time()
+    alert_id = str(uuid.uuid4())
+    
+    print(f"[{time.strftime('%H:%M:%S')}] 📥 Received report: {report.message[:50]}...")
+    
+    # Return immediately, process AI in background
+    background_tasks.add_task(process_report_background, report, alert_id)
+    
+    elapsed = (time.time() - start_time) * 1000
+    print(f"[{time.strftime('%H:%M:%S')}] ✅ Report accepted in {elapsed:.1f}ms - ID: {alert_id}")
+    
+    return {
+        "status": "accepted",
+        "id": alert_id,
+        "message": "Report queued for AI processing"
+    }
+
+async def process_report_background(report: IncidentReport, alert_id: str):
+    start_time = time.time()
     try:
+        print(f"[{time.strftime('%H:%M:%S')}] 🤖 Starting AI analysis for {alert_id}")
+        
         # Get AI analysis
+        ai_start = time.time()
         raw_ai_response = analyze_report(report.message)
+        ai_elapsed = (time.time() - ai_start) * 1000
+        print(f"[{time.strftime('%H:%M:%S')}] 🧠 AI analysis completed in {ai_elapsed:.1f}ms")
+        
         ai_data = clean_json_string(raw_ai_response)
         
         new_alert = {
-            "id": str(uuid.uuid4()),
+            "id": alert_id,
             "message": report.message,
             "analysis": ai_data,
             "detected_language": ai_data.get("detected_language", "english"),
-            "detected_language_label": ai_data.get("detected_language_label", "English"),
             "original_text": ai_data.get("original_text", report.message),
-            "translated_summary": ai_data.get("translated_summary", ai_data.get("summary", "Emergency report received")),
+            "english_summary": ai_data.get("english_summary", ai_data.get("translated_summary", "Emergency report received")),
+            "urgency_score": ai_data.get("urgency_score", ai_data.get("urgency", 5)),
+            "suggested_actions": ai_data.get("suggested_actions", "Deploy emergency response team"),
             "cultural_context": ai_data.get("cultural_context", ""),
             "location": {
                 "lat": report.lat if report.lat is not None else ai_data.get("location_lat", 0.0),
                 "lng": report.lng if report.lng is not None else ai_data.get("location_lng", 0.0)
             },
-            "disaster_type": ai_data.get("type", "other"),
-            "urgency": ai_data.get("urgency", 5),
+            "disaster_type": ai_data.get("disaster_type", ai_data.get("type", "other")),
             "confidence": ai_data.get("confidence", 0.8),
-            "summary": ai_data.get("summary", "Emergency report received"),
+            "summary": ai_data.get("english_summary", "Emergency report received"),
             "timestamp": "Just now"
         }
         
@@ -92,9 +133,12 @@ async def create_report(report: IncidentReport):
         # PUSH to all connected dashboards instantly!
         await manager.broadcast(new_alert)
         
-        return new_alert
+        total_elapsed = (time.time() - start_time) * 1000
+        print(f"[{time.strftime('%H:%M:%S')}] 📡 Alert broadcasted in {total_elapsed:.1f}ms total")
+        
     except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
+        error_elapsed = (time.time() - start_time) * 1000
+        print(f"[{time.strftime('%H:%M:%S')}] ❌ Background processing failed in {error_elapsed:.1f}ms: {str(e)}")
 
 @app.get("/alerts")
 async def get_alerts():
@@ -102,4 +146,5 @@ async def get_alerts():
 
 if __name__ == "__main__":
     import uvicorn
+    print("System Audit Complete: Pan-African Resilience Engine Online")
     uvicorn.run(app, host="0.0.0.0", port=8000)

@@ -1,11 +1,38 @@
 'use client';
 
-import { useMemo } from 'react';
-import { Map, Layer, Source } from 'react-map-gl/mapbox';
+import { useMemo, useRef, useEffect } from 'react';
+import { Map, Layer, Source, useMap } from 'react-map-gl/mapbox';
 import type { LayerProps } from 'react-map-gl/mapbox';
 import { Alert } from '@/types/alert';
 
 const MAPBOX_TOKEN = process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN;
+
+// Auto-pan component for new alerts
+function MapAutoPan({ alerts }: { alerts: Alert[] }) {
+  const map = useMap();
+  const latestAlertRef = useRef<Alert | null>(null);
+
+  useEffect(() => {
+    if (alerts.length > 0 && map?.current) {
+      const latestAlert = alerts[0]; // Assuming alerts are sorted by timestamp (newest first)
+      
+      // Only pan if this is a genuinely new alert
+      if (!latestAlertRef.current || latestAlertRef.current.id !== latestAlert.id) {
+        latestAlertRef.current = latestAlert;
+        
+        // Smooth flyTo to the new alert location
+        map.current.flyTo({
+          center: [latestAlert.location.lng, latestAlert.location.lat],
+          zoom: 10,
+          duration: 2000,
+          essential: true
+        });
+      }
+    }
+  }, [alerts, map]);
+
+  return null;
+}
 
 const heatmapLayer: LayerProps = {
   id: 'heatmap',
@@ -104,8 +131,8 @@ export default function InteractiveMap({
   return (
     <Map
       initialViewState={{
-        longitude: -95.7129,
-        latitude: 37.0902,
+        longitude: 37.0, // Center on Africa
+        latitude: 0.0,
         zoom: 3.5,
       }}
       style={{ width: '100%', height: '100%' }}
@@ -115,6 +142,7 @@ export default function InteractiveMap({
       <Source type="geojson" data={geojsonData}>
         <Layer {...heatmapLayer} />
       </Source>
+      <MapAutoPan alerts={alerts} />
     </Map>
   );
 }

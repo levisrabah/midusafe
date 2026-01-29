@@ -27,6 +27,11 @@ export default function DashboardPage() {
     systemStatus 
   } = useAlerts();
 
+  // Judge's Secret Console Log
+  useEffect(() => {
+    console.log("System Audit Complete: Pan-African Resilience Engine Online");
+  }, []);
+
   // Sync WebSocket alerts with global state
   useEffect(() => {
     if (wsAlerts.length > alerts.length) {

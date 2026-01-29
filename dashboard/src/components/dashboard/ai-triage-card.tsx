@@ -49,6 +49,37 @@ const UrgencyIndicator = ({ urgency }: { urgency: number }) => {
   );
 };
 
+const getLanguageBadge = (detectedLanguage: string, detectedLanguageLabel?: string) => {
+  const langMap = {
+    'en': '🇬🇧 EN',
+    'sw': '🇰🇪 SW',
+    'sh': '🇰🇪 SH',
+    'luo': '🇰🇪 LUO',
+    'am': '🇪🇹 AM',
+    'fr': '🇫🇷 FR',
+    'pt': '🇵🇹 PT',
+    'ar': '🇸🇦 AR',
+    'ha': '🇳🇬 HA',
+    'yo': '🇳🇬 YO',
+    'ig': '🇳🇬 IG',
+    'zu': '🇿🇦 ZU',
+    'xh': '🇿🇦 XH',
+    'af': '🇿🇦 AF',
+    'so': '🇸🇴 SO',
+    'ti': '🇪🇷 TI',
+    'om': '🇪🇹 OM',
+    'wo': '🇸🇳 WO'
+  };
+  
+  // Handle native dialect labels
+  if (detectedLanguageLabel && detectedLanguageLabel.includes('Native:')) {
+    const dialectName = detectedLanguageLabel.replace('Native: ', '').substring(0, 3).toUpperCase();
+    return `🌍 ${dialectName}`;
+  }
+  
+  return langMap[detectedLanguage as keyof typeof langMap] || `🌍 ${detectedLanguageLabel?.substring(0, 3).toUpperCase() || detectedLanguage?.substring(0, 3).toUpperCase()}`;
+};
+
 export default function AiTriageCard({ alert }: { alert: Alert }) {
   return (
     <motion.div
@@ -60,18 +91,42 @@ export default function AiTriageCard({ alert }: { alert: Alert }) {
     >
       <div className="flex items-start justify-between">
         <div className="flex items-center gap-4">
-          <UrgencyIndicator urgency={alert.urgency} />
-          <div>
-            <Badge variant="destructive" className="flex items-center gap-2 bg-emergency-red hover:bg-emergency-red/90">
-              {disasterIcons[alert.disaster_type]}
-              <span className="font-semibold">{alert.disaster_type}</span>
-            </Badge>
+          <UrgencyIndicator urgency={alert.urgency_score || alert.urgency} />
+          <div className="flex-1">
+            <div className="flex items-center gap-2 mb-1">
+              <Badge variant="destructive" className="flex items-center gap-2 bg-emergency-red hover:bg-emergency-red/90">
+                {disasterIcons[alert.disaster_type]}
+                <span className="font-semibold">{alert.disaster_type}</span>
+              </Badge>
+              <span className="text-xs font-semibold text-zinc-400 bg-zinc-800 px-2 py-1 rounded">
+                {getLanguageBadge(alert.detected_language, alert.detected_language_label)}
+              </span>
+            </div>
             <p className="mt-1 text-xs text-zinc-400">{new Date(alert.timestamp).toLocaleString()}</p>
           </div>
         </div>
       </div>
       
-      <AIAnalysis summary={alert.summary} urgency={alert.urgency} />
+      {/* Original vernacular text */}
+      {alert.original_text && (
+        <div className="mt-3 p-2 bg-zinc-800/50 rounded border-l-2 border-zinc-600">
+          <p className="text-xs text-zinc-300 italic">"{alert.original_text}"</p>
+        </div>
+      )}
+      
+      {/* English translation */}
+      <div className="mt-3 p-3 bg-zinc-900/50 rounded">
+        <p className="text-sm text-zinc-200">{alert.english_summary || alert.translated_summary || alert.summary}</p>
+      </div>
+      
+      {/* Suggested actions */}
+      {alert.suggested_actions && (
+        <div className="mt-3 p-2 bg-growth-green/10 rounded border-l-2 border-growth-green">
+          <p className="text-xs text-growth-green font-medium">{alert.suggested_actions}</p>
+        </div>
+      )}
+      
+      <AIAnalysis summary={alert.english_summary || alert.summary} urgency={alert.urgency_score || alert.urgency} />
     </motion.div>
   );
 }

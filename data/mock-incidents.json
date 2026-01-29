@@ -21,7 +21,7 @@
     "message": "Lake Victoria backflow in Dunga beach, fishing boats destroyed, homes completely submerged",
     "location_name": "Dunga, Kisumu, Kenya",
     "lat": -0.0833,
-    "lng": 34.7500
+    "lng": 34.75
   },
   {
     "message": "Severe drought in Homa Bay, crops completely failed, livestock dying, food emergency declared",
@@ -120,7 +120,7 @@
     "lng": 36.9333
   },
   {
-    "message": "Mabati ya gichagi yameanguka Westlands, watu wamejerihi, polisi wamefika",
+    "message": "Mabati ya gichagi yameanguka Westlands, watu wamejeruhi, polisi wamefika",
     "location_name": "Westlands, Kenya",
     "lat": -1.2655,
     "lng": 36.7984
@@ -129,7 +129,7 @@
     "message": "Kong'ongocho Dunga, pi en ochok, wange ose dhiang'o, weche marachielo",
     "location_name": "Dunga, Kisumu, Kenya",
     "lat": -0.0833,
-    "lng": 34.7500
+    "lng": 34.75
   },
   {
     "message": "Mfereji umeforka Rongai, maji yote yanatiririka nyumbani, tunahitaji pump",
@@ -147,6 +147,138 @@
     "message": "Chunk imeanguka Kitengela, watu wamefika chini, tunahitaji excavator",
     "location_name": "Kitengela, Kenya",
     "lat": -1.6833,
-    "lng": 36.9500
+    "lng": 36.95
+  },
+  {
+    "message": "Flash flood in Ruiru town, Thika River overflow, industrial area submerged, chemical leak suspected",
+    "location_name": "Ruiru, Kenya",
+    "lat": -1.1464,
+    "lng": 36.9614
+  },
+  {
+    "message": "Urban heatwave emergency in Dar es Salaam, temperatures exceeding 45°C, multiple heatstroke cases reported",
+    "location_name": "Dar es Salaam, Tanzania",
+    "lat": -6.7924,
+    "lng": 39.2083
+  },
+  {
+    "message": "Catastrophic landslide in Bududa district, entire village buried, hundreds missing, rescue teams overwhelmed",
+    "location_name": "Bududa, Uganda",
+    "lat": 0.9167,
+    "lng": 34.2167
+  },
+  {
+    "message": "Cyclone Idai aftermath in Beira, coastal flooding, infrastructure destroyed, cholera outbreak risk",
+    "location_name": "Beira, Mozambique",
+    "lat": -19.8436,
+    "lng": 34.8389
+  },
+  {
+    "message": "Coastal erosion disaster in Lagos, Atlantic encroaching on Victoria Island, luxury homes collapsing",
+    "location_name": "Lagos, Nigeria",
+    "lat": 6.5244,
+    "lng": 3.3792
+  },
+  {
+    "message": "Severe drought in Hargeisa region, livestock deaths reaching 80%, water sources completely dry",
+    "location_name": "Hargeisa, Somaliland",
+    "lat": 9.56,
+    "lng": 44.065
+  },
+  {
+    "message": "Industrial explosion at Addis Ababa factory, toxic smoke cloud, evacuation radius 5km",
+    "location_name": "Addis Ababa, Ethiopia",
+    "lat": 9.145,
+    "lng": 40.4897
+  },
+  {
+    "message": "Dam failure threat in Kigali, heavy rains causing structural concerns, downstream areas at risk",
+    "location_name": "Kigali, Rwanda",
+    "lat": -1.9536,
+    "lng": 30.0606
+  },
+  {
+    "message": "Desert locust swarm invasion in Khartoum, crops destroyed, food security crisis imminent",
+    "location_name": "Khartoum, Sudan",
+    "lat": 15.5007,
+    "lng": 32.5599
+  },
+  {
+    "message": "Volcanic ash fall near Goma, air quality hazardous, airport closed, respiratory illness surge",
+    "location_name": "Goma, DRC",
+    "lat": -1.6792,
+    "lng": 29.2586
+  },
+  {
+    "message": "Coastal red tide outbreak in Cape Town, marine life die-off, fishing industry paralyzed",
+    "location_name": "Cape Town, South Africa",
+    "lat": -33.9249,
+    "lng": 18.4241
+  },
+  {
+    "message": "Sahara dust storm emergency in Niamey, visibility zero, respiratory emergency declared",
+    "location_name": "Niamey, Niger",
+    "lat": 13.5116,
+    "lng": 2.1254
+  },
+  {
+    "message": "River flooding in Bamako, Niger River overflow, historic district submerged, cultural heritage at risk",
+    "location_name": "Bamako, Mali",
+    "lat": 12.6392,
+    "lng": 8.0029
+  },
+  {
+    "message": "Earthquake damage in Conakry, buildings collapsed, coastal tsunami warning issued",
+    "location_name": "Conakry, Guinea",
+    "lat": 9.6412,
+    "lng": -13.5784
+  },
+  {
+    "message": "Wildfire outbreak in Rabat region, forest fires approaching residential areas, EU assistance requested",
+    "location_name": "Rabat, Morocco",
+    "lat": 34.0209,
+    "lng": -6.8416
+  },
+  {
+    "message": "Tropical storm in Abidjan, port operations suspended, container yard flooding, supply chain disruption",
+    "location_name": "Abidjan, Côte d'Ivoire",
+    "lat": 5.36,
+    "lng": -4.0083
+  },
+  {
+    "message": "Flash floods in Accra, market areas completely submerged, traders lose entire stock worth millions",
+    "location_name": "Accra, Ghana",
+    "lat": 5.6037,
+    "lng": -0.187
+  },
+  {
+    "message": "Landslide in Freetown slum areas, torrential rains trigger mudslides, entire communities displaced",
+    "location_name": "Freetown, Sierra Leone",
+    "lat": 8.4657,
+    "lng": -13.2317
+  },
+  {
+    "message": "Drought emergency in Harare, water rationing implemented, agricultural output down 70%",
+    "location_name": "Harare, Zimbabwe",
+    "lat": -17.8292,
+    "lng": 31.0522
+  },
+  {
+    "message": "Coastal flooding in Maputo, sea level rise inundates low-lying areas, evacuation of 50,000 residents",
+    "location_name": "Maputo, Mozambique",
+    "lat": -25.9692,
+    "lng": 32.5732
+  },
+  {
+    "message": "Industrial fire in Johannesburg CBD, high-rise building engulfed, multiple casualties reported",
+    "location_name": "Johannesburg, South Africa",
+    "lat": -26.2041,
+    "lng": 28.0473
+  },
+  {
+    "message": "Flash flood in Nairobi slums, Mathare River overflow, thousands displaced, disease outbreak risk",
+    "location_name": "Mathare, Nairobi, Kenya",
+    "lat": -1.2625,
+    "lng": 36.8474
   }
 ]

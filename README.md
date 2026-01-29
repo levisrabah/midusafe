@@ -1,21 +1,24 @@
 # MIDUSAFE
-### Real-time Emergency Synthesis & Coordination Unified Engine
+### Pan-African Disaster Response System
 
-**MIDUSAFE** is a high-performance AI command center designed for disaster response and climate resilience. It transforms the "noise" of a crisis—fragmented social media feeds, sensor data, and satellite imagery—into a single, actionable **Common Operational Picture (COP)**.
+![MIDUSAFE](https://img.shields.io/badge/MIDUSAFE-Pan--African-Red) ![License](https://img.shields.io/badge/License-MIT-blue) ![Python](https://img.shields.io/badge/Python-3.8+-green) ![Next.js](https://img.shields.io/badge/Next.js-14+-black) ![Climate Hackathon](https://img.shields.io/badge/Climate-Hackathon-orange)
+
+**MIDUSAFE** is a high-performance AI command center designed for disaster response and climate resilience across the African continent. It transforms the "noise" of a crisis—fragmented social media feeds, sensor data, and satellite imagery—into a single, actionable **Common Operational Picture (COP)**.
 
 ---
 
-## Project Vision
-In the first hours of a disaster, data is chaotic. MIDUSAFE uses multi-modal AI to fuse crowd-sourced intelligence with official data streams, allowing emergency managers to visualize verified threats and deploy resources with surgical precision.
+## 🌍 Pan-African Vision
+In the first hours of a disaster, data is chaotic. MIDUSAFE uses multi-modal AI to fuse crowd-sourced intelligence with official data streams, allowing emergency managers to visualize verified threats and deploy resources with surgical precision across all 54 African nations.
 
-**🌍 Enhanced with Vernacular-First Support for Kenya & East Africa**
+**🚀 Bridging the "Last Mile" of Climate Communication in Africa**
 
-## 🌍 Vernacular-First Features
-- **Universal Language Detection**: Auto-detects ANY language including English, Swahili, Sheng, Dholuo, Kalenjin, Gikuyu, Luhya, Somali, French, Arabic
-- **Code-Switching Support**: Handles mixed-language sentences (e.g., "Moto umekuwa serious, watu wanarun tao")
-- **Cultural Context Awareness**: Extracts meaning from local terms like 'Boma', 'Shamba', 'Stage', 'Mtaa', 'Gichagi'
-- **Native Dialect Labeling**: Identifies specific Kenyan dialects (e.g., 'Native: Kalenjin', 'Native: Gikuyu')
-- **Ground Truth Display**: Shows original vernacular reports alongside English translations
+## 🌍 Pan-African Multilingual AI Triage
+- **Universal Language Detection**: Auto-detects ANY language including Sheng, Swahili, Dholuo, Amharic, French, Portuguese, Arabic, Hausa, Yoruba, Igbo, Zulu, Xhosa, Afrikaans, Somali, Tigrinya, Oromo, Wolof
+- **Code-Switching Support**: Handles mixed-language sentences across all African languages
+- **Cultural Context Awareness**: Extracts meaning from local terms and geographical references specific to each region
+- **Native Dialect Labeling**: Identifies specific African dialects and regional variations
+- **Ground Truth Display**: Shows original vernacular reports alongside professional English translations
+- **AI-Generated Actions**: Suggests specific response actions (e.g., "Dispatch Red Cross to Kisumu Sector 4")
 
 ## 🚀 Production-Grade Command Center Features
 
@@ -44,20 +47,58 @@ In the first hours of a disaster, data is chaotic. MIDUSAFE uses multi-modal AI 
 - **Visual Feedback**: Pulsing indicators and smooth state transitions
 - **Transcription Ready**: Placeholder for speech-to-text integration
 
-## 📍 Hyper-Local Data Integration
-- **23 Kenyan Scenarios**: Targeting Thika, Kenyatta University, Kahawa Wendani, Westlands, Dunga (Kisumu), Homa Bay
+## 📍 Global-to-Local Geospatial Data
+- **45+ Pan-African Incidents**: Covering all regions from Kenya to South Africa, Morocco to Mozambique
+- **Hyper-Local Kenyan Spots**: Thika, Kenyatta University, Kahawa Wendani, Ruiru, Homa Bay, Westlands, Mathare
+- **Continental Hotspots**: 
+  - **Dar es Salaam, TZ**: Urban heatwave emergencies
+  - **Bududa, UG**: Catastrophic landslides
+  - **Beira, MOZ**: Cyclone aftermath
+  - **Lagos, NGA**: Coastal erosion disasters
+  - **Hargeisa, SOM**: Severe drought emergencies
+  - **Addis Ababa, ET**: Industrial explosions
+  - **Cape Town, ZA**: Red tide outbreaks
+  - **Khartoum, SD**: Locust swarm invasions
 - **Vernacular Reports**:
   - **Dholuo**: "Pi ochopo e dhoot e Homa Bay" (Water reached doorstep)
   - **Sheng**: "Mvua imepiga Wendani bypass ni river" (Rain hit Wendani, bypass is river)
   - **Code-Switching**: "Moto umekuwa serious, watu wanarun tao"
-- **Precise Coordinates**: Map markers fly-to exact locations
+- **Precise Coordinates**: Map auto-pans to exact incident locations with smooth flyTo animations
 
 ## 🏗️ Technical Architecture
-- **Frontend**: Next.js 14+, Tailwind CSS, Shadcn/UI, Framer Motion, Leaflet Maps
+
+```mermaid
+graph TB
+    A[Community Reports] --> B[AI Triage Engine]
+    B --> C[WebSocket Broadcast]
+    C --> D[Real-time Dashboard]
+    
+    E[Simulation Engine] --> B
+    F[Voice Recording] --> B
+    G[Mock Data] --> E
+    
+    B --> H[Language Detection]
+    B --> I[Cultural Context]
+    B --> J[Urgency Scoring]
+    B --> K[Action Generation]
+    
+    D --> L[Interactive Map]
+    D --> M[Alert Cards]
+    D --> N[Toast Notifications]
+    
+    L --> O[Auto-Pan to Location]
+    M --> P[Language Badges]
+    M --> Q[Vernacular Text]
+    N --> R[Bottom-Center Display]
+```
+
+### Technology Stack
+- **Frontend**: Next.js 14+, Tailwind CSS, Shadcn/UI, Framer Motion, Mapbox GL
 - **Backend**: FastAPI (Python) with Gemini AI integration
 - **Real-time**: WebSocket connections for live alert broadcasting
 - **AI Engine**: Google Gemini 2.0 Flash for multilingual triage
 - **Voice**: Browser MediaRecorder API for audio capture
+- **Maps**: Mapbox Dark theme with auto-pan functionality
 
 ## 🛠️ Development Guide
 
@@ -75,8 +116,9 @@ In the first hours of a disaster, data is chaotic. MIDUSAFE uses multi-modal AI 
 4. **Display**: Language badges → Ground truth → Map markers
 
 ### Mock Data
-- **Location**: `/data/mock-incidents.json` - 23 hyper-local Kenyan scenarios
-- **Simulation**: `python3 simulation.py` - Test multilingual reporting
+- **Location**: `/data/mock-incidents.json` - 45+ Pan-African disaster scenarios
+- **Simulation**: `python3 simulation.py` - Test multilingual reporting with 5-10 second cycling
+- **Demo Mode**: Click "Demo Mode" button for 3 specific alert sequence (Dholuo, Sheng, English)
 
 ## 🚀 Quick Start
 
@@ -135,9 +177,11 @@ NEXT_PUBLIC_WS_URL=ws://localhost:8000/ws/alerts
 4. **Submit**: Real-time AI triage and dashboard broadcast
 
 ### Supported Languages
-- **Primary**: English, Swahili, Sheng, Dholuo
-- **Extended**: Kalenjin, Gikuyu, Luhya, Somali, French, Arabic
-- **Code-Switching**: Mixed language sentences automatically handled
+- **East Africa**: English, Swahili, Sheng, Dholuo, Kalenjin, Gikuyu, Luhya, Somali, Amharic, Tigrinya, Oromo
+- **West Africa**: Hausa, Yoruba, Igbo, Wolof, French
+- **Southern Africa**: Zulu, Xhosa, Afrikaans, Portuguese
+- **North Africa**: Arabic, French
+- **Code-Switching**: Mixed language sentences automatically handled across all African languages
 
 ## 🔧 Development Guidelines
 
@@ -186,4 +230,19 @@ python3 simulation.py
 
 ---
 
-**MIDUSAFE** - Transforming emergency response through vernacular-first AI intelligence and cultural awareness. Built for Kenya, ready for the world.
+## 🌟 Climate Hackathon Impact
+
+### Demo Mode Features
+- **3-Alert Sequence**: Perfect for pitch demonstrations
+- **Language Diversity**: Showcases Dholuo, Sheng, and English processing
+- **Auto-Pan Map**: Smooth flyTo animations to incident locations
+- **Real-Time Processing**: Live AI triage and WebSocket broadcasting
+
+### Competitive Advantages
+- **Pan-African Coverage**: 45+ incidents across all African regions
+- **True Multilingual**: 18+ African languages with cultural context
+- **Production Ready**: Glassmorphism UI, real-time clock, climate metrics
+- **Scalable Architecture**: WebSocket-driven for thousands of concurrent users
+- **AI-Powered Actions**: Generates specific response recommendations
+
+**MIDUSAFE** - Transforming emergency response through vernacular-first AI intelligence and cultural awareness. Built for Africa, ready for global climate challenges.

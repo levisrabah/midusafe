@@ -236,11 +236,11 @@ export default function InteractiveMapLeaflet({ alerts }: { alerts: Alert[] }) {
                     <div className="p-2">
                       <div className="flex items-center gap-2 mb-2">
                         <AlertTriangle className="h-4 w-4 text-emergency-red" />
-                        <span className="font-semibold">{alert.disaster_type}</span>
+                        <span className="font-semibold">{alert.disaster_type || 'Emergency'}</span>
                       </div>
-                      <p className="text-sm text-zinc-300 mb-2">{alert.summary}</p>
+                      <p className="text-sm text-zinc-300 mb-2">{alert.summary || alert.english_summary || 'Emergency report'}</p>
                       <div className="text-xs text-zinc-500">
-                        Urgency: {alert.urgency}/10
+                        Urgency: {alert.urgency_score || alert.urgency || 5}/10
                       </div>
                     </div>
                   </Popup>

@@ -13,44 +13,89 @@ client = genai.Client(
 
 def analyze_report(text):
     prompt = f"""
-    You are a Universal Emergency Response AI specializing in multilingual disaster triage for Kenya and East Africa.
-    You must support ALL languages including English, Swahili, Sheng, Dholuo, Kalenjin, Gikuyu, Luhya, Somali, French, Arabic, and any other language.
+    You are a Pan-African Crisis Dispatcher specializing in multilingual disaster triage across the entire African continent.
+    You must support ALL languages including Sheng, Swahili, Dholuo, Amharic, French, Portuguese, Arabic, Hausa, Yoruba, Igbo, Zulu, Xhosa, Afrikaans, Somali, Amharic, Tigrinya, Oromo, Wolof, and any other African language or dialect.
     
     Analyze this report: '{text}'
     
     CRITICAL REQUIREMENTS:
     1. Universal Language Detection: Auto-detect ANY language (including code-switching where people mix multiple languages)
-    2. Dialect Identification: If it's a Kenyan dialect, label it specifically (e.g., 'Native: Kalenjin', 'Native: Gikuyu')
-    3. Code-Switching Handling: Handle mixed-language sentences (e.g., "Moto imekuwa serious, watu wanarun tao")
-    4. English Translation: Always provide English translation for the Command Center
-    5. Cultural Context: Extract cultural terms like 'Boma', 'Shamba', 'Stage', 'Mtaa', 'Madhuka', 'Gichagi', 'Chunk'
-    6. Geospatial Intelligence: Use Kenyan place names for precise location mapping
+    2. Dialect Identification: Label specific dialects (e.g., 'Sheng', 'Dholuo', 'Amharic', 'Hausa', 'Yoruba', 'Zulu', 'Portuguese', 'French')
+    3. Code-Switching Handling: Handle mixed-language sentences (e.g., "Moto umekuwa serious, watu wanarun tao")
+    4. English Translation: Always provide professional English translation for the Command Center
+    5. Cultural Context: Extract cultural terms and geographical references specific to each region
+    6. Geospatial Intelligence: Use African place names for precise location mapping across all countries
     
     Return ONLY a JSON object with:
-    - 'detected_language': (auto-detected language code - en, sw, sh, luo, kal, kik, luh, som, fr, ar, or 'native:[dialect_name]')
-    - 'detected_language_label': (full language name - 'English', 'Swahili', 'Sheng', 'Dholuo', 'Native: Kalenjin', 'Native: Gikuyu', etc.)
     - 'original_text': (the exact input text received)
-    - 'translated_summary': (English translation for dashboard)
+    - 'detected_language': (auto-detected language code - en, sw, sh, luo, am, fr, pt, ar, ha, yo, ig, zu, xh, af, so, ti, om, wo, or 'native:[dialect_name]')
+    - 'english_summary': (professional English translation for dashboard)
+    - 'urgency_score': (1-10 based on immediate threat to life, where 10 is most critical)
+    - 'suggested_actions': (AI-generated next steps, e.g., "Dispatch Red Cross to Kisumu Sector 4")
     - 'cultural_context': (brief explanation of local terms and their significance)
-    - 'urgency': (1-10, where 10 is most critical)
-    - 'type': (flood, fire, structural_collapse, drought, industrial_accident, gas_leak, landslide, storm, erosion, heatwave, disease_outbreak, or other)
-    - 'summary': (one short sentence incorporating cultural context)
-    - 'location_lat': (accurate latitude for the Kenyan location, decimal)
-    - 'location_lng': (accurate longitude for the Kenyan location, decimal)
+    - 'disaster_type': (flood, fire, structural_collapse, drought, industrial_accident, gas_leak, landslide, storm, erosion, heatwave, disease_outbreak, locust_invasion, volcanic_activity, coastal_erosion, or other)
+    - 'location_lat': (accurate latitude for the African location, decimal)
+    - 'location_lng': (accurate longitude for the African location, decimal)
     - 'confidence': (0.0 to 1.0 confidence score in your analysis)
     
-    Consider Kenyan infrastructure, local geography, cultural significance, and regional emergency patterns.
+    Consider African infrastructure, local geography, cultural significance, and regional emergency patterns across all 54 African nations.
     """
     
     try:
-        # 3. Generate content using the Gemini model
-        response = client.models.generate_content(
-            model='gemini-2.0-flash', 
-            contents=prompt
-        )
+        # 3. Generate content using the Gemini model with timeout
+        import signal
+        
+        def timeout_handler(signum, frame):
+            raise TimeoutError("AI call timed out")
+        
+        # Set 5 second timeout for AI call
+        signal.signal(signal.SIGALRM, timeout_handler)
+        signal.alarm(5)
+        
+        try:
+            response = client.models.generate_content(
+                model='gemini-2.0-flash', 
+                contents=prompt
+            )
+        finally:
+            signal.alarm(0)  # Cancel alarm
+        
+        # Validate response before returning
+        if not response.text or response.text.strip() == "":
+            raise ValueError("Empty response from AI model")
+            
         return response.text
+    except TimeoutError:
+        # Return quick fallback response
+        return f"""{{
+            "original_text": "{text}",
+            "detected_language": "en",
+            "english_summary": "Emergency report received - AI processing delayed",
+            "urgency_score": 5,
+            "suggested_actions": "Manual review required",
+            "cultural_context": "AI processing timeout",
+            "disaster_type": "other",
+            "location_lat": 0.0,
+            "location_lng": 0.0,
+            "confidence": 0.1,
+            "timeout": true
+        }}"""
     except Exception as e:
-        return f"Error: {str(e)}"
+        # Return structured error response for graceful handling
+        error_response = f"""{{
+            "original_text": "{text}",
+            "detected_language": "en",
+            "english_summary": "AI processing temporarily unavailable - using fallback analysis",
+            "urgency_score": 5,
+            "suggested_actions": "Manual review required for this report",
+            "cultural_context": "Unable to process due to technical issues",
+            "disaster_type": "other",
+            "location_lat": 0.0,
+            "location_lng": 0.0,
+            "confidence": 0.1,
+            "error": "{str(e)}"
+        }}"""
+        return error_response
 #Test the function
 if __name__ == "__main__":
     test_report = "Help! There is massive flooding on Main St and the water is rising fast!"
