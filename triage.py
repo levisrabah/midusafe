@@ -1,6 +1,7 @@
 import os
 from google import genai
 from dotenv import load_dotenv
+from urgency_intelligence import calculate_urgency_score
 # 1. Load environment variables from a .env file
 load_dotenv()
 
@@ -66,12 +67,13 @@ def analyze_report(text):
             
         return response.text
     except TimeoutError:
-        # Return quick fallback response
+        # Return quick fallback response with intelligent urgency
+        intelligent_urgency = calculate_urgency_score(text)
         return f"""{{
             "original_text": "{text}",
             "detected_language": "en",
             "english_summary": "Emergency report received - AI processing delayed",
-            "urgency_score": 5,
+            "urgency_score": {intelligent_urgency},
             "suggested_actions": "Manual review required",
             "cultural_context": "AI processing timeout",
             "disaster_type": "other",
@@ -81,12 +83,13 @@ def analyze_report(text):
             "timeout": true
         }}"""
     except Exception as e:
-        # Return structured error response for graceful handling
+        # Return structured error response with intelligent urgency
+        intelligent_urgency = calculate_urgency_score(text)
         error_response = f"""{{
             "original_text": "{text}",
             "detected_language": "en",
             "english_summary": "AI processing temporarily unavailable - using fallback analysis",
-            "urgency_score": 5,
+            "urgency_score": {intelligent_urgency},
             "suggested_actions": "Manual review required for this report",
             "cultural_context": "Unable to process due to technical issues",
             "disaster_type": "other",

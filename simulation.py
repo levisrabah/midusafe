@@ -24,12 +24,25 @@ def send_incident_report(incident):
     """Send incident report to the backend API with retries"""
     url = "http://127.0.0.1:8000/report"
     
+    # Extract enhanced data from incident
     payload = {
         "message": incident["message"],
         "location": incident["location_name"],
         "lat": incident["lat"],
         "lng": incident["lng"]
     }
+    
+    # Add base urgency if available
+    if "base_urgency" in incident:
+        payload["base_urgency"] = incident["base_urgency"]
+    
+    # Add disaster type if available
+    if "disaster_type" in incident:
+        payload["disaster_type"] = incident["disaster_type"]
+    
+    # Add severity data if available
+    if "severity" in incident:
+        payload["severity"] = incident["severity"]
     
     headers = {
         "Content-Type": "application/json"
@@ -38,7 +51,11 @@ def send_incident_report(incident):
     timestamp = datetime.now().strftime("%H:%M:%S")
     payload_size = len(json.dumps(payload))
     
-    print(f"[{timestamp}] 📤 Sending: {incident['location_name']} ({payload_size} bytes)")
+    # Display incident info
+    urgency_info = f" (Urgency: {incident.get('base_urgency', '?')}/10)" if "base_urgency" in incident else ""
+    disaster_info = f" [{incident.get('disaster_type', 'unknown')}]" if "disaster_type" in incident else ""
+    
+    print(f"[{timestamp}] 📤 Sending: {incident['location_name']}{disaster_info}{urgency_info} ({payload_size} bytes)")
     
     # Retry with exponential backoff
     for attempt in range(3):
@@ -55,7 +72,8 @@ def send_incident_report(incident):
             
             if response.status_code == 200:
                 result = response.json()
-                print(f"[{timestamp}] ✅ Accepted in {elapsed:.1f}ms - ID: {result.get('id', 'unknown')}")
+                urgency_display = f" [Urgency: {incident.get('base_urgency', '?')}/10]" if "base_urgency" in incident else ""
+                print(f"[{timestamp}] ✅ Accepted in {elapsed:.1f}ms - ID: {result.get('id', 'unknown')}{urgency_display}")
                 return True
             else:
                 print(f"[{timestamp}] ❌ HTTP {response.status_code}: {response.text[:100]}")

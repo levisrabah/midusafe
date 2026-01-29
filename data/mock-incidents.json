@@ -3,282 +3,517 @@
     "message": "Industrial fire at Thika Super Highway, factory workers trapped, smoke covering entire area",
     "location_name": "Thika, Kenya",
     "lat": -1.0393,
-    "lng": 37.0715
+    "lng": 37.0715,
+    "base_urgency": 9,
+    "disaster_type": "industrial_fire",
+    "severity": "critical",
+    "affected_population": "high",
+    "infrastructure_impact": "severe"
   },
   {
     "message": "Flash flood at Kenyatta University bypass, students stranded in hostels, roads completely submerged",
     "location_name": "Kenyatta University, Kenya",
     "lat": -1.2232,
-    "lng": 36.8946
+    "lng": 36.8946,
+    "base_urgency": 8,
+    "disaster_type": "flash_flood",
+    "severity": "high",
+    "affected_population": "medium",
+    "infrastructure_impact": "moderate"
   },
   {
     "message": "Structural collapse at Kahawa Wendani, residential building fell, multiple families trapped under debris",
     "location_name": "Kahawa Wendani, Kenya",
     "lat": -1.2167,
-    "lng": 36.9333
+    "lng": 36.9333,
+    "base_urgency": 10,
+    "disaster_type": "structural_collapse",
+    "severity": "critical",
+    "affected_population": "high",
+    "infrastructure_impact": "severe"
   },
   {
     "message": "Lake Victoria backflow in Dunga beach, fishing boats destroyed, homes completely submerged",
     "location_name": "Dunga, Kisumu, Kenya",
     "lat": -0.0833,
-    "lng": 34.75
+    "lng": 34.75,
+    "base_urgency": 7,
+    "disaster_type": "flood",
+    "severity": "high",
+    "affected_population": "medium",
+    "infrastructure_impact": "moderate"
   },
   {
     "message": "Severe drought in Homa Bay, crops completely failed, livestock dying, food emergency declared",
     "location_name": "Homa Bay, Kenya",
     "lat": -0.5167,
-    "lng": 34.4833
+    "lng": 34.4833,
+    "base_urgency": 6,
+    "disaster_type": "drought",
+    "severity": "moderate",
+    "affected_population": "high",
+    "infrastructure_impact": "low"
   },
   {
     "message": "Urban emergency in Westlands, gas leak suspected, building evacuation in progress",
     "location_name": "Westlands, Kenya",
     "lat": -1.2655,
-    "lng": 36.7984
+    "lng": 36.7984,
+    "base_urgency": 8,
+    "disaster_type": "gas_leak",
+    "severity": "high",
+    "affected_population": "medium",
+    "infrastructure_impact": "moderate"
   },
   {
     "message": "Pi ochopo e dhoot e Homa Bay, nyumba dhi mar chike, wathe dhi ng'ato",
     "location_name": "Homa Bay, Kenya",
     "lat": -0.5167,
-    "lng": 34.4833
+    "lng": 34.4833,
+    "base_urgency": 9,
+    "disaster_type": "flood",
+    "severity": "high",
+    "affected_population": "medium",
+    "infrastructure_impact": "moderate"
   },
   {
     "message": "Mvua imepiga Wendani bypass ni river, magari hayawezikupita, tunahitaji rescue",
     "location_name": "Kahawa Wendani, Kenya",
     "lat": -1.2167,
-    "lng": 36.9333
+    "lng": 36.9333,
+    "base_urgency": 7,
+    "disaster_type": "flash_flood",
+    "severity": "moderate",
+    "affected_population": "low",
+    "infrastructure_impact": "moderate"
   },
   {
     "message": "Moto umeteketeza nyumba zetu Karura, watu wamekimbia, tunahitaji msaada haraka",
     "location_name": "Karura, Kenya",
     "lat": -1.2569,
-    "lng": 36.7956
+    "lng": 36.7956,
+    "base_urgency": 8,
+    "disaster_type": "fire",
+    "severity": "high",
+    "affected_population": "medium",
+    "infrastructure_impact": "moderate"
   },
   {
     "message": "Komen che mososiot KU, pi en moko duto, weche marachielo kod hostel",
     "location_name": "Kenyatta University, Kenya",
     "lat": -1.2232,
-    "lng": 36.8946
+    "lng": 36.8946,
+    "base_urgency": 6,
+    "disaster_type": "flood",
+    "severity": "moderate",
+    "affected_population": "medium",
+    "infrastructure_impact": "low"
   },
   {
     "message": "Moto umekuwa serious, watu wanarun tao, fire brigade imefika lakini haiwezi",
     "location_name": "Thika, Kenya",
     "lat": -1.0393,
-    "lng": 37.0715
+    "lng": 37.0715,
+    "base_urgency": 9,
+    "disaster_type": "industrial_fire",
+    "severity": "critical",
+    "affected_population": "high",
+    "infrastructure_impact": "severe"
   },
   {
     "message": "Boma langu limeteketeza kwa moto, ng'ombe wangu wamekufa, nimebaki na hakuna",
     "location_name": "Kajiado, Kenya",
     "lat": -1.8333,
-    "lng": 36.8333
+    "lng": 36.8333,
+    "base_urgency": 5,
+    "disaster_type": "fire",
+    "severity": "moderate",
+    "affected_population": "low",
+    "infrastructure_impact": "low"
   },
   {
     "message": "Pi dala e Kisumu, dhoudi marachielo, nyithindo dhi ose to wacho",
     "location_name": "Kisumu, Kenya",
     "lat": -0.1022,
-    "lng": 34.7617
+    "lng": 34.7617,
+    "base_urgency": 7,
+    "disaster_type": "flood",
+    "severity": "moderate",
+    "affected_population": "medium",
+    "infrastructure_impact": "moderate"
   },
   {
     "message": "Mambo imejoka hapa Eastlands, maji yamejaa nyumba zetu, tunahitaji helikopta",
     "location_name": "Eastlands, Kenya",
     "lat": -1.2921,
-    "lng": 36.8219
+    "lng": 36.8219,
+    "base_urgency": 8,
+    "disaster_type": "flash_flood",
+    "severity": "high",
+    "affected_population": "high",
+    "infrastructure_impact": "moderate"
   },
   {
     "message": "Shamba limejaa maji, mahindi yote yameharibika, tunahitaji chakula msaada",
     "location_name": "Uasin Gishu, Kenya",
     "lat": 0.5167,
-    "lng": 35.2833
+    "lng": 35.2833,
+    "base_urgency": 4,
+    "disaster_type": "flood",
+    "severity": "low",
+    "affected_population": "low",
+    "infrastructure_impact": "low"
   },
   {
     "message": "Stage ya Buruburu imejaa maji, matembezi hayawezi, matatu zimegoma kukimbia",
     "location_name": "Buruburu, Kenya",
     "lat": -1.2921,
-    "lng": 36.8219
+    "lng": 36.8219,
+    "base_urgency": 5,
+    "disaster_type": "flash_flood",
+    "severity": "moderate",
+    "affected_population": "medium",
+    "infrastructure_impact": "low"
   },
   {
     "message": "Dhoudi marachielo kod Thika, pi en moko to wacho, nyithindo dhi ber",
     "location_name": "Thika, Kenya",
     "lat": -1.0393,
-    "lng": 37.0715
+    "lng": 37.0715,
+    "base_urgency": 6,
+    "disaster_type": "flood",
+    "severity": "moderate",
+    "affected_population": "low",
+    "infrastructure_impact": "low"
   },
   {
     "message": "Mafuriko yamejaa mtaa wa Kayole, watu wako kwenye paa, tunahitaji rescue haraka",
     "location_name": "Kayole, Kenya",
     "lat": -1.2921,
-    "lng": 36.8219
+    "lng": 36.8219,
+    "base_urgency": 9,
+    "disaster_type": "flash_flood",
+    "severity": "high",
+    "affected_population": "high",
+    "infrastructure_impact": "moderate"
   },
   {
     "message": "Ninao kod KU, maji yamejaa hostels, tuko stranded, tusaidie tafadhali",
     "location_name": "Kenyatta University, Kenya",
     "lat": -1.2232,
-    "lng": 36.8946
+    "lng": 36.8946,
+    "base_urgency": 7,
+    "disaster_type": "flash_flood",
+    "severity": "moderate",
+    "affected_population": "medium",
+    "infrastructure_impact": "low"
   },
   {
     "message": "Fire imechoma kwa Kahawa, building imeanguka, watu wamekufa, emergency needed",
     "location_name": "Kahawa, Kenya",
     "lat": -1.2167,
-    "lng": 36.9333
+    "lng": 36.9333,
+    "base_urgency": 10,
+    "disaster_type": "structural_collapse",
+    "severity": "critical",
+    "affected_population": "high",
+    "infrastructure_impact": "severe"
   },
   {
     "message": "Mabati ya gichagi yameanguka Westlands, watu wamejeruhi, polisi wamefika",
     "location_name": "Westlands, Kenya",
     "lat": -1.2655,
-    "lng": 36.7984
+    "lng": 36.7984,
+    "base_urgency": 6,
+    "disaster_type": "structural_collapse",
+    "severity": "moderate",
+    "affected_population": "low",
+    "infrastructure_impact": "moderate"
   },
   {
     "message": "Kong'ongocho Dunga, pi en ochok, wange ose dhiang'o, weche marachielo",
     "location_name": "Dunga, Kisumu, Kenya",
     "lat": -0.0833,
-    "lng": 34.75
+    "lng": 34.75,
+    "base_urgency": 8,
+    "disaster_type": "flood",
+    "severity": "high",
+    "affected_population": "medium",
+    "infrastructure_impact": "moderate"
   },
   {
     "message": "Mfereji umeforka Rongai, maji yote yanatiririka nyumbani, tunahitaji pump",
     "location_name": "Rongai, Kenya",
     "lat": -1.4389,
-    "lng": 36.9569
+    "lng": 36.9569,
+    "base_urgency": 5,
+    "disaster_type": "flood",
+    "severity": "low",
+    "affected_population": "low",
+    "infrastructure_impact": "low"
   },
   {
     "message": "Warenge mar gi timo Kisumu, pi en moko duto, nyithindo dhi ber to wacho",
     "location_name": "Kisumu, Kenya",
     "lat": -0.1022,
-    "lng": 34.7617
+    "lng": 34.7617,
+    "base_urgency": 6,
+    "disaster_type": "flood",
+    "severity": "moderate",
+    "affected_population": "medium",
+    "infrastructure_impact": "low"
   },
   {
     "message": "Chunk imeanguka Kitengela, watu wamefika chini, tunahitaji excavator",
     "location_name": "Kitengela, Kenya",
     "lat": -1.6833,
-    "lng": 36.95
+    "lng": 36.95,
+    "base_urgency": 7,
+    "disaster_type": "structural_collapse",
+    "severity": "moderate",
+    "affected_population": "medium",
+    "infrastructure_impact": "moderate"
   },
   {
     "message": "Flash flood in Ruiru town, Thika River overflow, industrial area submerged, chemical leak suspected",
     "location_name": "Ruiru, Kenya",
     "lat": -1.1464,
-    "lng": 36.9614
+    "lng": 36.9614,
+    "base_urgency": 9,
+    "disaster_type": "flash_flood",
+    "severity": "high",
+    "affected_population": "medium",
+    "infrastructure_impact": "severe"
   },
   {
     "message": "Urban heatwave emergency in Dar es Salaam, temperatures exceeding 45°C, multiple heatstroke cases reported",
     "location_name": "Dar es Salaam, Tanzania",
     "lat": -6.7924,
-    "lng": 39.2083
+    "lng": 39.2083,
+    "base_urgency": 8,
+    "disaster_type": "heatwave",
+    "severity": "high",
+    "affected_population": "high",
+    "infrastructure_impact": "moderate"
   },
   {
     "message": "Catastrophic landslide in Bududa district, entire village buried, hundreds missing, rescue teams overwhelmed",
     "location_name": "Bududa, Uganda",
     "lat": 0.9167,
-    "lng": 34.2167
+    "lng": 34.2167,
+    "base_urgency": 10,
+    "disaster_type": "landslide",
+    "severity": "critical",
+    "affected_population": "high",
+    "infrastructure_impact": "severe"
   },
   {
     "message": "Cyclone Idai aftermath in Beira, coastal flooding, infrastructure destroyed, cholera outbreak risk",
     "location_name": "Beira, Mozambique",
     "lat": -19.8436,
-    "lng": 34.8389
+    "lng": 34.8389,
+    "base_urgency": 9,
+    "disaster_type": "storm",
+    "severity": "critical",
+    "affected_population": "high",
+    "infrastructure_impact": "severe"
   },
   {
     "message": "Coastal erosion disaster in Lagos, Atlantic encroaching on Victoria Island, luxury homes collapsing",
     "location_name": "Lagos, Nigeria",
     "lat": 6.5244,
-    "lng": 3.3792
+    "lng": 3.3792,
+    "base_urgency": 7,
+    "disaster_type": "coastal_erosion",
+    "severity": "moderate",
+    "affected_population": "medium",
+    "infrastructure_impact": "moderate"
   },
   {
     "message": "Severe drought in Hargeisa region, livestock deaths reaching 80%, water sources completely dry",
     "location_name": "Hargeisa, Somaliland",
     "lat": 9.56,
-    "lng": 44.065
+    "lng": 44.065,
+    "base_urgency": 8,
+    "disaster_type": "drought",
+    "severity": "high",
+    "affected_population": "high",
+    "infrastructure_impact": "moderate"
   },
   {
     "message": "Industrial explosion at Addis Ababa factory, toxic smoke cloud, evacuation radius 5km",
     "location_name": "Addis Ababa, Ethiopia",
     "lat": 9.145,
-    "lng": 40.4897
+    "lng": 40.4897,
+    "base_urgency": 10,
+    "disaster_type": "industrial_accident",
+    "severity": "critical",
+    "affected_population": "high",
+    "infrastructure_impact": "severe"
   },
   {
     "message": "Dam failure threat in Kigali, heavy rains causing structural concerns, downstream areas at risk",
     "location_name": "Kigali, Rwanda",
     "lat": -1.9536,
-    "lng": 30.0606
+    "lng": 30.0606,
+    "base_urgency": 9,
+    "disaster_type": "structural_collapse",
+    "severity": "high",
+    "affected_population": "high",
+    "infrastructure_impact": "severe"
   },
   {
     "message": "Desert locust swarm invasion in Khartoum, crops destroyed, food security crisis imminent",
     "location_name": "Khartoum, Sudan",
     "lat": 15.5007,
-    "lng": 32.5599
+    "lng": 32.5599,
+    "base_urgency": 7,
+    "disaster_type": "locust_invasion",
+    "severity": "moderate",
+    "affected_population": "high",
+    "infrastructure_impact": "moderate"
   },
   {
     "message": "Volcanic ash fall near Goma, air quality hazardous, airport closed, respiratory illness surge",
     "location_name": "Goma, DRC",
     "lat": -1.6792,
-    "lng": 29.2586
+    "lng": 29.2586,
+    "base_urgency": 8,
+    "disaster_type": "volcanic_activity",
+    "severity": "high",
+    "affected_population": "medium",
+    "infrastructure_impact": "moderate"
   },
   {
     "message": "Coastal red tide outbreak in Cape Town, marine life die-off, fishing industry paralyzed",
     "location_name": "Cape Town, South Africa",
     "lat": -33.9249,
-    "lng": 18.4241
+    "lng": 18.4241,
+    "base_urgency": 6,
+    "disaster_type": "disease_outbreak",
+    "severity": "moderate",
+    "affected_population": "medium",
+    "infrastructure_impact": "low"
   },
   {
     "message": "Sahara dust storm emergency in Niamey, visibility zero, respiratory emergency declared",
     "location_name": "Niamey, Niger",
     "lat": 13.5116,
-    "lng": 2.1254
+    "lng": 2.1254,
+    "base_urgency": 7,
+    "disaster_type": "storm",
+    "severity": "moderate",
+    "affected_population": "medium",
+    "infrastructure_impact": "moderate"
   },
   {
     "message": "River flooding in Bamako, Niger River overflow, historic district submerged, cultural heritage at risk",
     "location_name": "Bamako, Mali",
     "lat": 12.6392,
-    "lng": 8.0029
+    "lng": 8.0029,
+    "base_urgency": 8,
+    "disaster_type": "flood",
+    "severity": "high",
+    "affected_population": "medium",
+    "infrastructure_impact": "moderate"
   },
   {
     "message": "Earthquake damage in Conakry, buildings collapsed, coastal tsunami warning issued",
     "location_name": "Conakry, Guinea",
     "lat": 9.6412,
-    "lng": -13.5784
+    "lng": -13.5784,
+    "base_urgency": 9,
+    "disaster_type": "earthquake",
+    "severity": "high",
+    "affected_population": "high",
+    "infrastructure_impact": "severe"
   },
   {
     "message": "Wildfire outbreak in Rabat region, forest fires approaching residential areas, EU assistance requested",
     "location_name": "Rabat, Morocco",
     "lat": 34.0209,
-    "lng": -6.8416
+    "lng": -6.8416,
+    "base_urgency": 8,
+    "disaster_type": "wildfire",
+    "severity": "high",
+    "affected_population": "medium",
+    "infrastructure_impact": "moderate"
   },
   {
     "message": "Tropical storm in Abidjan, port operations suspended, container yard flooding, supply chain disruption",
     "location_name": "Abidjan, Côte d'Ivoire",
     "lat": 5.36,
-    "lng": -4.0083
+    "lng": -4.0083,
+    "base_urgency": 7,
+    "disaster_type": "storm",
+    "severity": "moderate",
+    "affected_population": "medium",
+    "infrastructure_impact": "moderate"
   },
   {
     "message": "Flash floods in Accra, market areas completely submerged, traders lose entire stock worth millions",
     "location_name": "Accra, Ghana",
     "lat": 5.6037,
-    "lng": -0.187
+    "lng": -0.187,
+    "base_urgency": 8,
+    "disaster_type": "flash_flood",
+    "severity": "high",
+    "affected_population": "medium",
+    "infrastructure_impact": "moderate"
   },
   {
     "message": "Landslide in Freetown slum areas, torrential rains trigger mudslides, entire communities displaced",
     "location_name": "Freetown, Sierra Leone",
     "lat": 8.4657,
-    "lng": -13.2317
+    "lng": -13.2317,
+    "base_urgency": 9,
+    "disaster_type": "landslide",
+    "severity": "high",
+    "affected_population": "high",
+    "infrastructure_impact": "moderate"
   },
   {
     "message": "Drought emergency in Harare, water rationing implemented, agricultural output down 70%",
     "location_name": "Harare, Zimbabwe",
     "lat": -17.8292,
-    "lng": 31.0522
+    "lng": 31.0522,
+    "base_urgency": 7,
+    "disaster_type": "drought",
+    "severity": "moderate",
+    "affected_population": "high",
+    "infrastructure_impact": "moderate"
   },
   {
     "message": "Coastal flooding in Maputo, sea level rise inundates low-lying areas, evacuation of 50,000 residents",
     "location_name": "Maputo, Mozambique",
     "lat": -25.9692,
-    "lng": 32.5732
+    "lng": 32.5732,
+    "base_urgency": 8,
+    "disaster_type": "coastal_erosion",
+    "severity": "high",
+    "affected_population": "high",
+    "infrastructure_impact": "moderate"
   },
   {
     "message": "Industrial fire in Johannesburg CBD, high-rise building engulfed, multiple casualties reported",
     "location_name": "Johannesburg, South Africa",
     "lat": -26.2041,
-    "lng": 28.0473
+    "lng": 28.0473,
+    "base_urgency": 9,
+    "disaster_type": "industrial_fire",
+    "severity": "high",
+    "affected_population": "medium",
+    "infrastructure_impact": "severe"
   },
   {
     "message": "Flash flood in Nairobi slums, Mathare River overflow, thousands displaced, disease outbreak risk",
     "location_name": "Mathare, Nairobi, Kenya",
     "lat": -1.2625,
-    "lng": 36.8474
+    "lng": 36.8474,
+    "base_urgency": 8,
+    "disaster_type": "flash_flood",
+    "severity": "high",
+    "affected_population": "high",
+    "infrastructure_impact": "moderate"
   }
 ]
