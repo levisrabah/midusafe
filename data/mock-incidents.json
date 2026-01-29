@@ -18,10 +18,10 @@
     "lng": 36.9333
   },
   {
-    "message": "Lake Victoria backflow in Kisumu, lakeside homes completely submerged, boats overturned",
-    "location_name": "Kisumu, Kenya",
-    "lat": -0.1022,
-    "lng": 34.7617
+    "message": "Lake Victoria backflow in Dunga beach, fishing boats destroyed, homes completely submerged",
+    "location_name": "Dunga, Kisumu, Kenya",
+    "lat": -0.0833,
+    "lng": 34.7500
   },
   {
     "message": "Severe drought in Homa Bay, crops completely failed, livestock dying, food emergency declared",
@@ -36,22 +36,16 @@
     "lng": 36.7984
   },
   {
-    "message": "Pi oguro dala e diere Kisumu, maduong gi dhoudi maro, nyithindo dhi ose",
-    "location_name": "Kisumu, Kenya",
-    "lat": -0.1022,
-    "lng": 34.7617
-  },
-  {
-    "message": "Kuna mbogi imestuck kwa flood tao, wanaibia vitu kwa maduka, polisi wamefika",
-    "location_name": "Nairobi, Kenya",
-    "lat": -1.2921,
-    "lng": 36.8219
-  },
-  {
-    "message": "Mvua kubwa imeharibu mazao hapa Homa Bay, wakulima wamebaki na hasara kubwa",
+    "message": "Pi ochopo e dhoot e Homa Bay, nyumba dhi mar chike, wathe dhi ng'ato",
     "location_name": "Homa Bay, Kenya",
     "lat": -0.5167,
     "lng": 34.4833
+  },
+  {
+    "message": "Mvua imepiga Wendani bypass ni river, magari hayawezikupita, tunahitaji rescue",
+    "location_name": "Kahawa Wendani, Kenya",
+    "lat": -1.2167,
+    "lng": 36.9333
   },
   {
     "message": "Moto umeteketeza nyumba zetu Karura, watu wamekimbia, tunahitaji msaada haraka",
@@ -60,10 +54,16 @@
     "lng": 36.7956
   },
   {
-    "message": "Chai imejaa mtaa wa Rongai, magari hayawezi kupita, watu wako stranded",
-    "location_name": "Rongai, Kenya",
-    "lat": -1.4389,
-    "lng": 36.9569
+    "message": "Komen che mososiot KU, pi en moko duto, weche marachielo kod hostel",
+    "location_name": "Kenyatta University, Kenya",
+    "lat": -1.2232,
+    "lng": 36.8946
+  },
+  {
+    "message": "Moto umekuwa serious, watu wanarun tao, fire brigade imefika lakini haiwezi",
+    "location_name": "Thika, Kenya",
+    "lat": -1.0393,
+    "lng": 37.0715
   },
   {
     "message": "Boma langu limeteketeza kwa moto, ng'ombe wangu wamekufa, nimebaki na hakuna",
@@ -72,7 +72,7 @@
     "lng": 36.8333
   },
   {
-    "message": "Warenge mar gi timo Kisumu, pi en moko duto, weche marachielo",
+    "message": "Pi dala e Kisumu, dhoudi marachielo, nyithindo dhi ose to wacho",
     "location_name": "Kisumu, Kenya",
     "lat": -0.1022,
     "lng": 34.7617
@@ -84,13 +84,13 @@
     "lng": 36.8219
   },
   {
-    "message": "Shamba limejaa maji, mahindi yote yameharibika, tunahitaji chakula",
+    "message": "Shamba limejaa maji, mahindi yote yameharibika, tunahitaji chakula msaada",
     "location_name": "Uasin Gishu, Kenya",
     "lat": 0.5167,
     "lng": 35.2833
   },
   {
-    "message": "Stage ya Buruburu imejaa maji, matembezi hayawezi, matatu zimegoma",
+    "message": "Stage ya Buruburu imejaa maji, matembezi hayawezi, matatu zimegoma kukimbia",
     "location_name": "Buruburu, Kenya",
     "lat": -1.2921,
     "lng": 36.8219
@@ -102,21 +102,51 @@
     "lng": 37.0715
   },
   {
-    "message": "Mafuriko yamejaa mtaa wa Kayole, watu wako kwenye paa, tunahitaji rescue",
+    "message": "Mafuriko yamejaa mtaa wa Kayole, watu wako kwenye paa, tunahitaji rescue haraka",
     "location_name": "Kayole, Kenya",
     "lat": -1.2921,
     "lng": 36.8219
   },
   {
-    "message": "Ninao kod KU, maji yamejaa hostels, tuko stranded, tusaidie",
+    "message": "Ninao kod KU, maji yamejaa hostels, tuko stranded, tusaidie tafadhali",
     "location_name": "Kenyatta University, Kenya",
     "lat": -1.2232,
     "lng": 36.8946
   },
   {
-    "message": "Fire imechoma kwa Kahawa, building imeanguka, watu wamekufa, emergency",
+    "message": "Fire imechoma kwa Kahawa, building imeanguka, watu wamekufa, emergency needed",
     "location_name": "Kahawa, Kenya",
     "lat": -1.2167,
     "lng": 36.9333
+  },
+  {
+    "message": "Mabati ya gichagi yameanguka Westlands, watu wamejerihi, polisi wamefika",
+    "location_name": "Westlands, Kenya",
+    "lat": -1.2655,
+    "lng": 36.7984
+  },
+  {
+    "message": "Kong'ongocho Dunga, pi en ochok, wange ose dhiang'o, weche marachielo",
+    "location_name": "Dunga, Kisumu, Kenya",
+    "lat": -0.0833,
+    "lng": 34.7500
+  },
+  {
+    "message": "Mfereji umeforka Rongai, maji yote yanatiririka nyumbani, tunahitaji pump",
+    "location_name": "Rongai, Kenya",
+    "lat": -1.4389,
+    "lng": 36.9569
+  },
+  {
+    "message": "Warenge mar gi timo Kisumu, pi en moko duto, nyithindo dhi ber to wacho",
+    "location_name": "Kisumu, Kenya",
+    "lat": -0.1022,
+    "lng": 34.7617
+  },
+  {
+    "message": "Chunk imeanguka Kitengela, watu wamefika chini, tunahitaji excavator",
+    "location_name": "Kitengela, Kenya",
+    "lat": -1.6833,
+    "lng": 36.9500
   }
 ]

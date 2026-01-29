@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useWebSocket } from '@/hooks/use-web-socket';
 import { useAlerts } from '@/hooks/use-alerts';
 import { Alert } from '@/types/alert';
@@ -12,11 +12,13 @@ import LiveHeaderTicker from '@/components/dashboard/live-header-ticker';
 import SystemStatus from '@/components/dashboard/system-status';
 import ToastContainer from '@/components/ui/toast';
 import CommunityReportButton from '@/components/dashboard/community-report-button';
+import UnifiedNavbar from '@/components/dashboard/unified-navbar';
 
 const WS_URL = 'ws://localhost:8000/ws/alerts';
 
 export default function DashboardPage() {
   const wsAlerts = useWebSocket<Alert>(WS_URL);
+  const [selectedLanguage, setSelectedLanguage] = useState('en');
   const { 
     alerts, 
     addAlert, 
@@ -44,14 +46,14 @@ export default function DashboardPage() {
         }}
       />
       
+      {/* Unified Navbar */}
+      <UnifiedNavbar 
+        selectedLanguage={selectedLanguage}
+        onLanguageChange={setSelectedLanguage}
+      />
+      
       {/* Toast Notifications */}
       <ToastContainer toasts={toasts} onRemove={removeToast} />
-      
-      {/* Live Header Ticker */}
-      <LiveHeaderTicker />
-      
-      {/* Climate Stats Bar */}
-      <ClimateStatsBar />
       
       {/* Main Content */}
       <div className="grid h-full grid-cols-12 gap-4 p-4 pt-20">

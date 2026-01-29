@@ -34,12 +34,25 @@ function Toast({ toast, onRemove }: ToastProps) {
 
   const getLanguageBadge = () => {
     const langMap = {
-      'english': '🇰🇪 EN',
+      'english': '�� EN',
       'swahili': '🇰🇪 SW',
       'sheng': '🇰🇪 SH',
-      'dholuo': '🇰🇪 LUO'
+      'dholuo': '🇰🇪 LUO',
+      'kalenjin': '🇰🇪 KAL',
+      'gikuyu': '🇰🇪 KIK',
+      'luhya': '🇰🇪 LUH',
+      'somali': '🇸🇴 SOM',
+      'french': '🇫🇷 FR',
+      'arabic': '🇸🇦 AR'
     };
-    return langMap[toast.detectedLanguage as keyof typeof langMap] || '🇰🇪 EN';
+    
+    // Handle native dialect labels
+    if (toast.detectedLanguageLabel && toast.detectedLanguageLabel.includes('Native:')) {
+      const dialectName = toast.detectedLanguageLabel.replace('Native: ', '').substring(0, 3).toUpperCase();
+      return `🇰🇪 ${dialectName}`;
+    }
+    
+    return langMap[toast.detectedLanguage as keyof typeof langMap] || `� ${toast.detectedLanguageLabel?.substring(0, 3).toUpperCase() || toast.detectedLanguage?.substring(0, 3).toUpperCase()}`;
   };
 
   return (

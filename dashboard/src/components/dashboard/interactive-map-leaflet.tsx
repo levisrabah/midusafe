@@ -196,6 +196,10 @@ export default function InteractiveMapLeaflet({ alerts }: { alerts: Alert[] }) {
         .leaflet-popup-tip {
           background: #18181b;
         }
+        
+        .leaflet-control-attribution {
+          display: none !important;
+        }
       `}</style>
       
       <div className="h-full w-full rounded-lg overflow-hidden border border-zinc-800">

@@ -24,14 +24,27 @@ export default function LiveFeed({ alerts }: LiveFeedProps) {
     return <AlertTriangle className="h-4 w-4" />;
   };
 
-  const getLanguageBadge = (language: string) => {
+  const getLanguageBadge = (language: string, languageLabel: string) => {
     const langMap = {
-      'english': '🇰🇪 EN',
+      'english': '�� EN',
       'swahili': '🇰🇪 SW',
       'sheng': '🇰🇪 SH',
-      'dholuo': '🇰🇪 LUO'
+      'dholuo': '🇰🇪 LUO',
+      'kalenjin': '🇰🇪 KAL',
+      'gikuyu': '🇰🇪 KIK',
+      'luhya': '🇰🇪 LUH',
+      'somali': '🇸🇴 SOM',
+      'french': '🇫🇷 FR',
+      'arabic': '🇸🇦 AR'
     };
-    return langMap[language as keyof typeof langMap] || '🇰🇪 EN';
+    
+    // Handle native dialect labels
+    if (languageLabel && languageLabel.includes('Native:')) {
+      const dialectName = languageLabel.replace('Native: ', '').substring(0, 3).toUpperCase();
+      return `🇰🇪 ${dialectName}`;
+    }
+    
+    return langMap[language as keyof typeof langMap] || `� ${languageLabel?.substring(0, 3).toUpperCase() || language?.substring(0, 3).toUpperCase()}`;
   };
 
   return (
@@ -95,7 +108,7 @@ export default function LiveFeed({ alerts }: LiveFeedProps) {
                           {alert.disaster_type}
                         </h3>
                         <span className="text-xs font-medium text-zinc-400 bg-zinc-800 px-2 py-1 rounded">
-                          {getLanguageBadge((alert as any).detected_language || 'english')}
+                          {getLanguageBadge((alert as any).detected_language || 'english', (alert as any).detected_language_label || 'English')}
                         </span>
                       </div>
                       <div className="flex items-center gap-2 text-xs text-zinc-500">
@@ -113,10 +126,24 @@ export default function LiveFeed({ alerts }: LiveFeedProps) {
                   {(alert as any).translated_summary || alert.summary}
                 </p>
 
+                {/* Ground Truth - Original Text */}
                 {(alert as any).original_text && (alert as any).original_text !== (alert as any).translated_summary && (
-                  <p className="text-xs text-zinc-400 italic mb-3 line-clamp-2">
-                    "Original: {(alert as any).original_text}"
-                  </p>
+                  <div className="bg-zinc-900/50 border border-zinc-800 rounded-lg p-2 mb-3">
+                    <p className="text-xs text-zinc-500 mb-1 font-medium">Ground Truth:</p>
+                    <p className="text-xs text-zinc-400 italic line-clamp-2">
+                      "{(alert as any).original_text}"
+                    </p>
+                  </div>
+                )}
+
+                {/* Cultural Context */}
+                {(alert as any).cultural_context && (
+                  <div className="bg-zinc-900/30 border border-zinc-800/50 rounded-lg p-2 mb-3">
+                    <p className="text-xs text-zinc-500 mb-1 font-medium">Cultural Context:</p>
+                    <p className="text-xs text-zinc-400 line-clamp-2">
+                      {(alert as any).cultural_context}
+                    </p>
+                  </div>
                 )}
 
                 {alert.location && (

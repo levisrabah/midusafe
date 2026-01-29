@@ -13,30 +13,33 @@ client = genai.Client(
 
 def analyze_report(text):
     prompt = f"""
-    You are a Kenyan Emergency Expert specializing in multilingual disaster response. 
-    You must support English, Swahili, Sheng, and Dholuo languages.
+    You are a Universal Emergency Response AI specializing in multilingual disaster triage for Kenya and East Africa.
+    You must support ALL languages including English, Swahili, Sheng, Dholuo, Kalenjin, Gikuyu, Luhya, Somali, French, Arabic, and any other language.
     
     Analyze this report: '{text}'
     
-    REQUIREMENTS:
-    1. Language Detection: Identify if the input is English, Swahili, Sheng, or Dholuo
-    2. Cultural Context: Extract cultural terms like 'Boma', 'Shamba', 'Stage', 'Mtaa', 'Madhuka' and explain their significance
-    3. Geospatial Intelligence: Use local place names to pinpoint exact locations in Kenya
-    4. Translation: Provide English translation for dashboard display
+    CRITICAL REQUIREMENTS:
+    1. Universal Language Detection: Auto-detect ANY language (including code-switching where people mix multiple languages)
+    2. Dialect Identification: If it's a Kenyan dialect, label it specifically (e.g., 'Native: Kalenjin', 'Native: Gikuyu')
+    3. Code-Switching Handling: Handle mixed-language sentences (e.g., "Moto imekuwa serious, watu wanarun tao")
+    4. English Translation: Always provide English translation for the Command Center
+    5. Cultural Context: Extract cultural terms like 'Boma', 'Shamba', 'Stage', 'Mtaa', 'Madhuka', 'Gichagi', 'Chunk'
+    6. Geospatial Intelligence: Use Kenyan place names for precise location mapping
     
     Return ONLY a JSON object with:
-    - 'detected_language': (english, swahili, sheng, dholuo)
+    - 'detected_language': (auto-detected language code - en, sw, sh, luo, kal, kik, luh, som, fr, ar, or 'native:[dialect_name]')
+    - 'detected_language_label': (full language name - 'English', 'Swahili', 'Sheng', 'Dholuo', 'Native: Kalenjin', 'Native: Gikuyu', etc.)
     - 'original_text': (the exact input text received)
     - 'translated_summary': (English translation for dashboard)
     - 'cultural_context': (brief explanation of local terms and their significance)
     - 'urgency': (1-10, where 10 is most critical)
-    - 'type': (flood, fire, structural_collapse, drought, industrial_accident, gas_leak, or other)
+    - 'type': (flood, fire, structural_collapse, drought, industrial_accident, gas_leak, landslide, storm, erosion, heatwave, disease_outbreak, or other)
     - 'summary': (one short sentence incorporating cultural context)
     - 'location_lat': (accurate latitude for the Kenyan location, decimal)
     - 'location_lng': (accurate longitude for the Kenyan location, decimal)
     - 'confidence': (0.0 to 1.0 confidence score in your analysis)
     
-    Consider Kenyan infrastructure, local geography, and cultural significance in your assessment.
+    Consider Kenyan infrastructure, local geography, cultural significance, and regional emergency patterns.
     """
     
     try:
