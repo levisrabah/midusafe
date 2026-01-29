@@ -25,8 +25,8 @@ const stats = [
 
 export default function ClimateStatsBar() {
   return (
-    <div className="fixed top-16 left-0 right-0 z-40 glass-morphism border-b border-zinc-800 px-4">
-      <div className="flex items-center justify-between py-3">
+    <div className="fixed top-16 left-0 right-0 z-40 glass-morphism border-b border-zinc-800 h-14">
+      <div className="flex items-center justify-between h-full px-4">
         <div className="flex items-center gap-2">
           <div className="h-3 w-3 rounded-full bg-emergency-red pulse-dot" />
           <p className="font-semibold text-emergency-red">SYSTEM ACTIVE</p>

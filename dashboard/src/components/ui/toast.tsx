@@ -32,6 +32,16 @@ function Toast({ toast, onRemove }: ToastProps) {
     }
   };
 
+  const getLanguageBadge = () => {
+    const langMap = {
+      'english': '🇰🇪 EN',
+      'swahili': '🇰🇪 SW',
+      'sheng': '🇰🇪 SH',
+      'dholuo': '🇰🇪 LUO'
+    };
+    return langMap[toast.detectedLanguage as keyof typeof langMap] || '🇰🇪 EN';
+  };
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 50, scale: 0.3 }}
@@ -39,15 +49,25 @@ function Toast({ toast, onRemove }: ToastProps) {
       exit={{ opacity: 0, y: 50, scale: 0.5, transition: { duration: 0.2 } }}
       className={`
         glass-card border-l-4 ${getBorderColor()} 
-        p-4 mb-2 max-w-md shadow-lg
+        p-4 mb-2 max-w-lg shadow-lg
       `}
     >
       <div className="flex items-start gap-3">
         {getIcon()}
         <div className="flex-1">
-          <p className="text-sm text-zinc-200 font-medium">
-            {toast.message}
+          <div className="flex items-center gap-2 mb-1">
+            <span className="text-xs font-semibold text-zinc-400 bg-zinc-800 px-2 py-1 rounded">
+              {getLanguageBadge()}
+            </span>
+          </div>
+          <p className="text-sm text-zinc-200 font-medium mb-1">
+            {toast.translatedSummary || toast.message}
           </p>
+          {toast.originalText && toast.originalText !== toast.translatedSummary && (
+            <p className="text-xs text-zinc-400 italic mt-1">
+              "{toast.originalText}"
+            </p>
+          )}
         </div>
         <button
           onClick={() => onRemove(toast.id)}
@@ -67,7 +87,7 @@ interface ToastContainerProps {
 
 export default function ToastContainer({ toasts, onRemove }: ToastContainerProps) {
   return (
-    <div className="fixed bottom-4 left-1/2 transform -translate-x-1/2 z-50 space-y-2">
+    <div className="fixed bottom-4 left-1/2 transform -translate-x-1/2 z-[100] space-y-2">
       <AnimatePresence mode="popLayout">
         {toasts.map((toast) => (
           <Toast key={toast.id} toast={toast} onRemove={onRemove} />

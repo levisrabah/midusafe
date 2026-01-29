@@ -71,6 +71,10 @@ async def create_report(report: IncidentReport):
             "id": str(uuid.uuid4()),
             "message": report.message,
             "analysis": ai_data,
+            "detected_language": ai_data.get("detected_language", "english"),
+            "original_text": ai_data.get("original_text", report.message),
+            "translated_summary": ai_data.get("translated_summary", ai_data.get("summary", "Emergency report received")),
+            "cultural_context": ai_data.get("cultural_context", ""),
             "location": {
                 "lat": report.lat if report.lat is not None else ai_data.get("location_lat", 0.0),
                 "lng": report.lng if report.lng is not None else ai_data.get("location_lng", 0.0)

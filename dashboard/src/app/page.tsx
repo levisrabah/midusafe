@@ -11,6 +11,7 @@ import SimulateButton from '@/components/dashboard/simulate-button';
 import LiveHeaderTicker from '@/components/dashboard/live-header-ticker';
 import SystemStatus from '@/components/dashboard/system-status';
 import ToastContainer from '@/components/ui/toast';
+import CommunityReportButton from '@/components/dashboard/community-report-button';
 
 const WS_URL = 'ws://localhost:8000/ws/alerts';
 
@@ -53,7 +54,7 @@ export default function DashboardPage() {
       <ClimateStatsBar />
       
       {/* Main Content */}
-      <div className="grid h-full grid-cols-12 gap-4 p-4 pt-32">
+      <div className="grid h-full grid-cols-12 gap-4 p-4 pt-20">
         {/* Left Sidebar - System Status & Live Feed */}
         <div className="col-span-4 h-full overflow-hidden space-y-4">
           <SystemStatus 
@@ -75,6 +76,9 @@ export default function DashboardPage() {
       
       {/* Simulate Button */}
       <SimulateButton />
+      
+      {/* Community Report Button */}
+      <CommunityReportButton />
     </main>
   );
 }

@@ -4,8 +4,8 @@ import { Activity, Thermometer, Users } from 'lucide-react';
 
 export default function LiveHeaderTicker() {
   return (
-    <div className="fixed top-0 left-0 right-0 z-50 glass-morphism border-b border-zinc-800">
-      <div className="flex items-center justify-between px-6 py-3">
+    <div className="fixed top-0 left-0 right-0 z-50 glass-morphism border-b border-zinc-800 h-16">
+      <div className="flex items-center justify-between px-6 h-full">
         <div className="flex items-center gap-2">
           <div className="h-2 w-2 rounded-full bg-emergency-red pulse-dot" />
           <span className="text-sm font-semibold text-emergency-red">LIVE</span>

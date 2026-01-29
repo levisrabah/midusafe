@@ -24,6 +24,16 @@ export default function LiveFeed({ alerts }: LiveFeedProps) {
     return <AlertTriangle className="h-4 w-4" />;
   };
 
+  const getLanguageBadge = (language: string) => {
+    const langMap = {
+      'english': '🇰🇪 EN',
+      'swahili': '🇰🇪 SW',
+      'sheng': '🇰🇪 SH',
+      'dholuo': '🇰🇪 LUO'
+    };
+    return langMap[language as keyof typeof langMap] || '🇰🇪 EN';
+  };
+
   return (
     <div className="h-full flex flex-col">
       {/* Header */}
@@ -80,9 +90,14 @@ export default function LiveFeed({ alerts }: LiveFeedProps) {
                       {getDisasterIcon(alert.disaster_type)}
                     </div>
                     <div>
-                      <h3 className="font-semibold text-zinc-200 text-sm">
-                        {alert.disaster_type}
-                      </h3>
+                      <div className="flex items-center gap-2 mb-1">
+                        <h3 className="font-semibold text-zinc-200 text-sm">
+                          {alert.disaster_type}
+                        </h3>
+                        <span className="text-xs font-medium text-zinc-400 bg-zinc-800 px-2 py-1 rounded">
+                          {getLanguageBadge((alert as any).detected_language || 'english')}
+                        </span>
+                      </div>
                       <div className="flex items-center gap-2 text-xs text-zinc-500">
                         <Clock className="h-3 w-3" />
                         {alert.timestamp}
@@ -95,8 +110,14 @@ export default function LiveFeed({ alerts }: LiveFeedProps) {
                 </div>
 
                 <p className="text-sm text-zinc-300 mb-3 line-clamp-2">
-                  {alert.summary}
+                  {(alert as any).translated_summary || alert.summary}
                 </p>
+
+                {(alert as any).original_text && (alert as any).original_text !== (alert as any).translated_summary && (
+                  <p className="text-xs text-zinc-400 italic mb-3 line-clamp-2">
+                    "Original: {(alert as any).original_text}"
+                  </p>
+                )}
 
                 {alert.location && (
                   <div className="flex items-center gap-1 text-xs text-zinc-500">

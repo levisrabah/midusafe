@@ -37,6 +37,63 @@ export default function InteractiveMapLeaflet({ alerts }: { alerts: Alert[] }) {
   const [isClient, setIsClient] = useState(false);
   const [L, setL] = useState<any>(null);
   const [emergencyIcon, setEmergencyIcon] = useState<any>(null);
+  const [locationIcons, setLocationIcons] = useState<any>({});
+
+  const getLocationIcon = (locationName: string, leaflet: any) => {
+    const locationKey = locationName.toLowerCase();
+    
+    // Special icons for specific locations
+    if (locationKey.includes('thika')) {
+      return leaflet.divIcon({
+        html: `<div class="location-marker thika-marker">
+          <div class="pulse-ring thika-pulse"></div>
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M12 2L2 7L12 12L22 7L12 2Z" fill="#f97316" stroke="#fff" stroke-width="2"/>
+            <path d="M2 17L12 22L22 17" fill="#f97316" stroke="#fff" stroke-width="2"/>
+            <path d="M2 12L12 17L22 12" fill="#f97316" stroke="#fff" stroke-width="2"/>
+          </svg>
+        </div>`,
+        className: 'custom-location-marker',
+        iconSize: [36, 36],
+        iconAnchor: [18, 36],
+      });
+    }
+    
+    if (locationKey.includes('kenyatta') || locationKey.includes('ku')) {
+      return leaflet.divIcon({
+        html: `<div class="location-marker ku-marker">
+          <div class="pulse-ring ku-pulse"></div>
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M12 2L2 7L12 12L22 7L12 2Z" fill="#3b82f6" stroke="#fff" stroke-width="2"/>
+            <path d="M2 17L12 22L22 17" fill="#3b82f6" stroke="#fff" stroke-width="2"/>
+            <path d="M2 12L12 17L22 12" fill="#3b82f6" stroke="#fff" stroke-width="2"/>
+          </svg>
+        </div>`,
+        className: 'custom-location-marker',
+        iconSize: [36, 36],
+        iconAnchor: [18, 36],
+      });
+    }
+    
+    if (locationKey.includes('kahawa') || locationKey.includes('wendani')) {
+      return leaflet.divIcon({
+        html: `<div class="location-marker kahawa-marker">
+          <div class="pulse-ring kahawa-pulse"></div>
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M12 2L2 7L12 12L22 7L12 2Z" fill="#10b981" stroke="#fff" stroke-width="2"/>
+            <path d="M2 17L12 22L22 17" fill="#10b981" stroke="#fff" stroke-width="2"/>
+            <path d="M2 12L12 17L22 12" fill="#10b981" stroke="#fff" stroke-width="2"/>
+          </svg>
+        </div>`,
+        className: 'custom-location-marker',
+        iconSize: [36, 36],
+        iconAnchor: [18, 36],
+      });
+    }
+    
+    // Default emergency icon
+    return emergencyIcon;
+  };
 
   useEffect(() => {
     setIsClient(true);
@@ -82,7 +139,7 @@ export default function InteractiveMapLeaflet({ alerts }: { alerts: Alert[] }) {
   return (
     <>
       <style jsx global>{`
-        .emergency-marker {
+        .emergency-marker, .location-marker {
           position: relative;
           display: flex;
           align-items: center;
@@ -96,6 +153,18 @@ export default function InteractiveMapLeaflet({ alerts }: { alerts: Alert[] }) {
           border: 2px solid #ef4444;
           border-radius: 50%;
           animation: ripple 2s ease-out infinite;
+        }
+        
+        .thika-pulse {
+          border-color: #f97316;
+        }
+        
+        .ku-pulse {
+          border-color: #3b82f6;
+        }
+        
+        .kahawa-pulse {
+          border-color: #10b981;
         }
         
         @keyframes ripple {
@@ -157,7 +226,7 @@ export default function InteractiveMapLeaflet({ alerts }: { alerts: Alert[] }) {
               {alert.location?.lat && alert.location?.lng && (
                 <Marker
                   position={[alert.location.lat, alert.location.lng]}
-                  icon={emergencyIcon}
+                  icon={getLocationIcon(alert.message || '', L)}
                 >
                   <Popup>
                     <div className="p-2">

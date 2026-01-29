@@ -8,6 +8,9 @@ interface ToastNotification {
   message: string;
   type: 'success' | 'error' | 'info';
   duration?: number;
+  detectedLanguage?: string;
+  originalText?: string;
+  translatedSummary?: string;
 }
 
 export function useAlerts() {
@@ -28,6 +31,9 @@ export function useAlerts() {
       message: `🚨 New Alert: ${alert.disaster_type} - ${alert.summary}`,
       type: 'info',
       duration: 5000,
+      detectedLanguage: (alert as any).detected_language || 'english',
+      originalText: (alert as any).original_text || alert.message,
+      translatedSummary: (alert as any).translated_summary || alert.summary,
     };
     
     setToasts(prev => [...prev, toast]);
