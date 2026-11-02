@@ -86,6 +86,20 @@ Baseline: commit tagged `pre-hackathon`. Everything below is new hackathon work.
   location match 1.0, severity-band acc 0.778 (14/18, all adjacent-band judgment calls),
   urgency MAE 0.67, avg latency 8.0s. Full per-item results in `data/sentinel_eval_results.json`
 
+## New: Step 10 — Docs
+- `README.md` (Sentinel-first, measured numbers only), `ARCHITECTURE.md`,
+  `DEMO_SCRIPT.md` (3-min), `.env.example` (no secrets), this log
+- `.env` confirmed gitignored (`git check-ignore .env` → ignored)
+
+## Known limitations
+- Gazetteer is Kenya-demo-scoped (~25 places); unlisted places stay unresolved by design
+- Languages tested live: English, Swahili, Sheng only; no broader coverage claimed
+- Voice tested on English speech sample; Swahili/Sheng voice not measured
+- Image analysis skipped (stretch goal); key lists muse-image-1.0 but unused
+- SQLite single-file store; no auth/multi-user; audit actor is a label, not identity
+- venv/ is tracked in git from before the hackathon (pre-existing); env churn left uncommitted
+- data/sentinel.db + data/sentinel_eval.db are local runtime state, intentionally uncommitted
+
 ## Assumptions
 - META_API_KEY in .env is the Model API key (48 chars, LLM_ prefix matches docs format) — confirmed working
 - Gazetteer over model coords: deliberate anti-fabrication design
