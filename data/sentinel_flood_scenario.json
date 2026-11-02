@@ -1,0 +1,46 @@
+{
+  "_label": "FICTIONAL / SIMULATED DEMO DATA - Mathare flood scenario. Not real emergency data.",
+  "_languages_tested": ["en", "sw", "sh"],
+  "reports": [
+    {
+      "message": "Water is rising fast on Juja Road near Mathare, several houses on our street are flooded and families are moving to higher ground.",
+      "location_hint": "Mathare, Nairobi",
+      "note": "English, clear location"
+    },
+    {
+      "message": "Mafuriko makubwa hapa Mathare North! Maji yamefika magotini na watoto hawawezi kutoka shuleni. Tafadhali tuma msaada.",
+      "location_hint": "",
+      "note": "Swahili, location in text only"
+    },
+    {
+      "message": "Msee maji imeflood Huruma sides, plot mzima iko kwa maji, watu wanahepa na vitu zao. Situation ni noma!",
+      "location_hint": "",
+      "note": "Sheng, location in text only"
+    },
+    {
+      "message": "There is flooding somewhere near the river and the roads are becoming impassable. Not sure exactly where, I am just passing through.",
+      "location_hint": "",
+      "note": "English, deliberately vague location -> must stay unresolved"
+    },
+    {
+      "message": "Maji yamejaa huku kwetu vijijini, hatuwezi kuvuka kwenda sokoni. Hakuna majeruhi lakini chakula kinaisha.",
+      "location_hint": "somewhere upcountry",
+      "note": "Swahili, unresolvable location -> must stay unresolved"
+    },
+    {
+      "message": "Small fire at a food kiosk on Kimathi Street, shopkeepers are putting it out with extinguishers. No one hurt.",
+      "location_hint": "Kimathi Street",
+      "note": "English, different incident type (control: NOT a flood duplicate)"
+    },
+    {
+      "message": "Mathare tena! Maji imeingia ploti yetu usiku kucha, vitu zote zimeharibika. Tunahitaji pa kulala.",
+      "location_hint": "Mathare",
+      "note": "Sheng + Swahili mix, likely duplicate of reports 1-2"
+    },
+    {
+      "message": "Tangu asubuhi maji yamekuwa yakipanda hapa Mathare. Saa hizi daraja la miguu limefunikwa kabisa na watu hawawezi kuvuka.",
+      "location_hint": "",
+      "note": "Swahili with time reference, likely duplicate of reports 1-2"
+    }
+  ]
+}

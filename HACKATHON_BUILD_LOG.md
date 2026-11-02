@@ -30,6 +30,28 @@ Baseline: commit tagged `pre-hackathon`. Everything below is new hackathon work.
 - Live test: Swahili Mathare flood report -> flood/sw/critical/urgency 9, Mathare resolved,
   stored, stats+audit OK, legacy /health intact
 
+## New: Step 3 — Demo dataset (fictional flood scenario)
+- `data/sentinel_flood_scenario.json`: 8 fictional Mathare reports, EN/SW/Sheng, vague locations,
+  one fire control; labelled fictional in data + UI
+- `scripts/seed_demo.py`: seeds via real Meta extraction. Live: 8/8 ok, langs en/sw/sh detected,
+  vague locations UNRESOLVED, fire control typed `fire` with 0 dup candidates
+
+## New: Step 4 — Duplicate candidate detection
+- `duplicates.py`: type + location (3km/15km or same place) + 6h window + wording overlap;
+  threshold 0.55 so type+time alone never flags; reasons explain WHY; never merges
+- Live: 10 candidates with reasons like "Same incident type: flood / Locations match (0.5 km) / Reported 0 min apart";
+  `GET /api/sentinel/duplicates`, `POST .../decision` (confirm/reject, audit-logged)
+
+## New: Step 5 — Evidence-backed intelligence briefs
+- `briefs.py`: Meta generates brief w/ json_schema; server rejects unknown cited ids + medical advice;
+  fallback brief quotes stored evidence only. `GET /api/sentinel/incidents/{id}/brief` (+cache)
+- Live: method=meta, all claims cited real rep_* ids, unknowns/to_verify/next-steps for human review
+
+## New: Step 6 — Human verification workflow + audit trail
+- `POST /api/sentinel/incidents/{id}/verify`: verify|request_info|reclassify|priority|note;
+  every action audit-logged with timestamp; no auto-dispatch anywhere
+- Live: verify->verified, priority=9, note, dup confirm all in audit (13 entries)
+
 ## Assumptions
 - META_API_KEY in .env is the Model API key (48 chars, LLM_ prefix matches docs format) — confirmed working
 - Gazetteer over model coords: deliberate anti-fabrication design

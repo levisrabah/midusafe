@@ -14,7 +14,9 @@ STOPWORDS = frozenset(
 )
 
 TIME_WINDOW_HOURS = 6
-SCORE_THRESHOLD = 0.45
+# 0.55 means type+time alone (0.45) is NOT enough: a location or wording
+# signal is also required before flagging a candidate.
+SCORE_THRESHOLD = 0.55
 
 
 def _tokens(text):
