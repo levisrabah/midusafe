@@ -7,11 +7,17 @@ import asyncio
 from fastapi import FastAPI, WebSocket, WebSocketDisconnect, HTTPException, BackgroundTasks
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
-from typing import List
+from typing import List, Optional
 from triage import analyze_report
 from urgency_intelligence import calculate_urgency_score, urgency_intelligence
 from language_intelligence import detect_language_enhanced, language_intelligence as lang_intel
 from disaster_severity import classify_disaster_severity, disaster_classifier
+# --- Sentinel (hackathon) imports ---
+import sentinel_store as sstore
+from sentinel_schemas import ReportIn
+from sentinel_pipeline import process_report_sync
+from meta_service import MetaAPIError
+import briefs as sbriefs
 
 app = FastAPI(title="MIDUSAFE Command Center")
 
@@ -203,6 +209,181 @@ async def process_report_background(report: IncidentReport, alert_id: str):
 @app.get("/alerts")
 async def get_alerts():
     return alerts_db
+
+# =====================================================================
+# SENTINEL (hackathon) API - Meta-powered incident intelligence
+# =====================================================================
+
+def _sentinel_broadcast(incident: dict, candidates: list):
+    """Shape a Sentinel incident for the live WebSocket feed.
+
+    Includes legacy-compatible fields so the existing dashboard keeps
+    working, plus the full Sentinel payload for new UI.
+    """
+    ex = incident["extraction"]
+    return {
+        "type": "sentinel_incident",
+        "sentinel": True,
+        "id": incident["id"],
+        "report_id": incident["report_id"],
+        "message": ex.get("original_report", ""),
+        "summary": ex.get("translated_summary", ""),
+        "disaster_type": ex.get("incident_type", "other"),
+        "urgency": ex.get("urgency", 5),
+        "urgency_score": ex.get("urgency", 5),
+        "confidence": ex.get("confidence", 0.0),
+        "timestamp": incident.get("created_at", ""),
+        "location": {
+            "lat": incident.get("latitude"),
+            "lng": incident.get("longitude"),
+            "resolved": bool(incident.get("location_resolved")),
+            "place": incident.get("resolved_place"),
+            "mentioned": ex.get("location_mentioned"),
+        },
+        "detected_language": ex.get("detected_language"),
+        "severity": ex.get("severity"),
+        "status": incident.get("status", "pending"),
+        "is_simulated": bool(incident.get("is_simulated")),
+        "duplicate_candidates": len(candidates),
+        "incident": incident,
+    }
+
+
+async def _process_sentinel_background(message: str, location_hint, is_simulated: bool):
+    try:
+        incident, candidates = process_report_sync(
+            message, location_hint, is_simulated=is_simulated)
+        await manager.broadcast(_sentinel_broadcast(incident, candidates))
+        print(f"📡 Sentinel incident {incident['id']} broadcasted "
+              f"({len(candidates)} dup candidates)")
+    except (MetaAPIError, ValueError) as e:
+        print(f"❌ Sentinel processing failed: {e}")
+        await manager.broadcast({"type": "sentinel_error", "error": str(e)[:300]})
+
+
+@app.post("/api/sentinel/reports")
+async def submit_sentinel_report(report: ReportIn, background_tasks: BackgroundTasks,
+                                 sync: bool = False):
+    """Submit a community report. sync=true processes inline (seed/tests)."""
+    if sync:
+        try:
+            incident, candidates = process_report_sync(
+                report.message, report.location_hint,
+                is_simulated=report.is_simulated)
+        except MetaAPIError as e:
+            raise HTTPException(status_code=502, detail=str(e))
+        except ValueError as e:
+            raise HTTPException(status_code=502, detail=str(e))
+        await manager.broadcast(_sentinel_broadcast(incident, candidates))
+        return {"status": "processed", "incident": incident,
+                "duplicate_candidates": candidates}
+    background_tasks.add_task(_process_sentinel_background, report.message,
+                              report.location_hint, report.is_simulated)
+    return {"status": "accepted", "message": "Report queued for Meta AI processing"}
+
+
+@app.get("/api/sentinel/incidents")
+async def list_sentinel_incidents(limit: int = 200):
+    return sstore.list_incidents(limit=limit)
+
+
+@app.get("/api/sentinel/incidents/{incident_id}")
+async def get_sentinel_incident(incident_id: str):
+    inc = sstore.get_incident(incident_id)
+    if not inc:
+        raise HTTPException(status_code=404, detail="Incident not found")
+    return inc
+
+
+@app.get("/api/sentinel/incidents/{incident_id}/brief")
+async def get_sentinel_brief(incident_id: str, refresh: bool = False):
+    if not refresh:
+        cached = sstore.get_brief(incident_id)
+        if cached:
+            return {"brief": cached, "method": "cached"}
+    try:
+        brief, method = sbriefs.generate_brief(incident_id)
+    except ValueError as e:
+        raise HTTPException(status_code=404, detail=str(e))
+    sstore.save_brief(incident_id, brief)
+    sstore.log_audit("brief_generated", "incident", incident_id, f"method={method}")
+    return {"brief": brief, "method": method}
+
+
+@app.get("/api/sentinel/duplicates")
+async def list_sentinel_duplicates(status: Optional[str] = None):
+    return sstore.list_duplicate_links(status=status)
+
+
+class DuplicateDecision(BaseModel):
+    decision: str  # confirmed | rejected
+
+
+@app.post("/api/sentinel/duplicates/{link_id}/decision")
+async def decide_sentinel_duplicate(link_id: str, body: DuplicateDecision):
+    if body.decision not in ("confirmed", "rejected"):
+        raise HTTPException(status_code=400, detail="decision must be confirmed|rejected")
+    links = [l for l in sstore.list_duplicate_links() if l["id"] == link_id]
+    if not links:
+        raise HTTPException(status_code=404, detail="Duplicate link not found")
+    sstore.decide_duplicate(link_id, body.decision)
+    sstore.log_audit(f"duplicate_{body.decision}", "duplicate", link_id,
+                     f"{links[0]['incident_a']} ~ {links[0]['incident_b']}")
+    return {"status": body.decision, "id": link_id}
+
+
+class VerificationAction(BaseModel):
+    action: str  # verify | request_info | reclassify | priority | note
+    value: Optional[str] = None
+
+
+@app.post("/api/sentinel/incidents/{incident_id}/verify")
+async def verify_sentinel_incident(incident_id: str, body: VerificationAction):
+    """Human verification workflow. Every action is audit-logged. Never auto-dispatches."""
+    inc = sstore.get_incident(incident_id)
+    if not inc:
+        raise HTTPException(status_code=404, detail="Incident not found")
+    if body.action == "verify":
+        sstore.update_incident(incident_id, status="verified")
+    elif body.action == "request_info":
+        sstore.update_incident(incident_id, status="needs_info")
+    elif body.action == "reclassify":
+        if not body.value:
+            raise HTTPException(status_code=400, detail="reclassify needs value")
+        sstore.update_incident(incident_id, classification=body.value)
+    elif body.action == "priority":
+        try:
+            p = int(body.value)
+            assert 1 <= p <= 10
+        except (TypeError, ValueError, AssertionError):
+            raise HTTPException(status_code=400, detail="priority needs 1-10")
+        sstore.update_incident(incident_id, priority=p)
+    elif body.action == "note":
+        if not body.value:
+            raise HTTPException(status_code=400, detail="note needs value")
+    else:
+        raise HTTPException(status_code=400,
+                            detail="action must be verify|request_info|reclassify|priority|note")
+    sstore.log_audit(body.action, "incident", incident_id, body.value or "")
+    return {"status": "ok", "action": body.action,
+            "incident": sstore.get_incident(incident_id)}
+
+
+@app.get("/api/sentinel/stats")
+async def sentinel_stats():
+    return sstore.stats()
+
+
+@app.get("/api/sentinel/audit")
+async def sentinel_audit(limit: int = 200):
+    return sstore.list_audit(limit=limit)
+
+
+@app.get("/api/sentinel/health")
+async def sentinel_health():
+    from meta_service import meta_service
+    return {"ok": True, "meta_configured": meta_service.configured,
+            "meta_model": meta_service.model, "meta_base_url": meta_service.base_url}
 
 if __name__ == "__main__":
     import uvicorn

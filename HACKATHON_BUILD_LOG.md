@@ -1,0 +1,35 @@
+# HACKATHON BUILD LOG — MIDUSAFE SENTINEL
+
+Baseline: commit tagged `pre-hackathon`. Everything below is new hackathon work.
+
+## Existing before hackathon (kept, not rewritten)
+- FastAPI backend (`main.py`): `POST /report` (Gemini), `GET /alerts`, `GET /health`, `WS /ws/alerts`
+- `triage.py` (Gemini 2.0 Flash), `language_intelligence.py`, `urgency_intelligence.py`, `disaster_severity.py`
+- `simulation.py`, `live_demo.py`, `data/mock-incidents.json` (45+ scenarios)
+- Next.js dashboard: live feed, Leaflet map, community report modal w/ placeholder voice transcription, toasts, navbar
+- No database (in-memory list), no verification workflow, no duplicate detection, no briefs, no tests
+
+## New: Phase 2 — Meta API verification (measured, not guessed)
+- Docs source: https://dev.meta.ai/docs (Models, Quickstart, Structured output)
+- Base URL `https://api.meta.ai/v1`, Bearer auth, default model `muse-spark-1.3`
+- `scripts/meta_smoke_test.py`: GET /models=200, POST /responses=200, POST /chat/completions+json_schema=200
+- Key accesses: muse-wonder-1.0, muse-spark-1.3/1.2/1.1 (+contributors), muse-image-1.0, muse-voice-transcribe-1.0, sam-3.1
+- Structured output: Responses API uses `text.format`; Chat Completions uses `response_format`+`json_schema` (used here)
+
+## New: Step 1 — Backend Meta AI service
+- `meta_service.py`: server-side key only (META_API_KEY/MODEL_API_KEY), META_BASE_URL/META_MODEL swappable,
+  timeouts (45s), retries w/ backoff on 408/429/5xx, typed errors, key redaction everywhere
+
+## New: Step 2 — Core slice (verified live)
+- `sentinel_schemas.py`: strict Pydantic extraction schema; model NEVER outputs coords/casualties
+- `gazetteer.py`: coords only for listed known places, else unresolved (never guessed)
+- `sentinel_store.py`: SQLite (`data/sentinel.db`) incidents/reports/duplicates/audit/briefs
+- `sentinel_pipeline.py`: report -> Meta extract -> validate -> resolve -> store -> dup-check -> audit
+- `main.py`: `POST /api/sentinel/reports` (+?sync), `GET /api/sentinel/incidents[/{id}]`,
+  `/stats`, `/audit`, `/health`; broadcasts over existing WS `/ws/alerts` w/ legacy-compatible fields
+- Live test: Swahili Mathare flood report -> flood/sw/critical/urgency 9, Mathare resolved,
+  stored, stats+audit OK, legacy /health intact
+
+## Assumptions
+- META_API_KEY in .env is the Model API key (48 chars, LLM_ prefix matches docs format) — confirmed working
+- Gazetteer over model coords: deliberate anti-fabrication design
