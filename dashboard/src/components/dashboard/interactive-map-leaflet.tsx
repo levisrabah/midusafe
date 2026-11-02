@@ -181,6 +181,11 @@ export default function InteractiveMapLeaflet({ alerts }: { alerts: Alert[] }) {
         .leaflet-container {
           background: #09090b;
         }
+
+        /* Dark command-center look from keyless OSM tiles */
+        .leaflet-tile-pane {
+          filter: invert(1) hue-rotate(180deg) brightness(0.92) contrast(0.92) grayscale(0.2);
+        }
         
         .leaflet-popup-content-wrapper {
           background: #18181b;
@@ -198,7 +203,13 @@ export default function InteractiveMapLeaflet({ alerts }: { alerts: Alert[] }) {
         }
         
         .leaflet-control-attribution {
-          display: none !important;
+          background: rgba(9, 9, 11, 0.8) !important;
+          color: #71717a !important;
+          font-size: 10px !important;
+          padding: 2px 6px !important;
+        }
+        .leaflet-control-attribution a {
+          color: #a1a1aa !important;
         }
       `}</style>
       
@@ -211,7 +222,8 @@ export default function InteractiveMapLeaflet({ alerts }: { alerts: Alert[] }) {
         >
           <TileLayer
             attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-            url="https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png"
+            url="https://tile.openstreetmap.org/{z}/{x}/{y}.png"
+            maxZoom={19}
           />
           
           <MapController alerts={alerts} />
