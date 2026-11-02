@@ -52,6 +52,29 @@ Baseline: commit tagged `pre-hackathon`. Everything below is new hackathon work.
   every action audit-logged with timestamp; no auto-dispatch anywhere
 - Live: verify->verified, priority=9, note, dup confirm all in audit (13 entries)
 
+## New: Step 7 — Dashboard and map polish
+- Sentinel Intel tab (default): stats cards (total/awaiting/high/dups/verified+categories),
+  intel feed w/ SIMULATED badges, unresolved-location warnings, loading/empty/error states
+- Incident detail slide-over: extraction, original+translation, location certainty, dup
+  candidates w/ WHY reasons + confirm/reject, on-demand brief, verify/request-info/
+  reclassify/priority/note controls, audit trail, missing-info + follow-ups
+- Map: markers ONLY for resolved locations + "N unresolved not shown" notice
+- Community report modal now submits to Sentinel (Meta) endpoint; legacy WS path skips
+  sentinel messages; live-feed null-coord guard
+- Fixed pre-existing build breakers in `ai-triage-card.tsx` (missing icon keys, bad
+  AIAnalysis props, optional-field access) + unexported ToastNotification. `npm run build` green,
+  production page serves HTTP 200 with Sentinel UI present
+
+## New: Step 8 — Voice (VERIFIED working on this key)
+- `muse-voice-transcribe-1.0` confirmed: real speech sample transcribed exactly ("Liberia")
+- Documented contract: `POST /v1/asr/transcribe?sessionId=` + multipart `request` JSON + `audio` WAV
+  (mono 16-bit PCM 16/24kHz); implemented in `MetaService.transcribe_file`
+- `POST /api/sentinel/voice/transcribe`: accepts webm/wav/mp3/ogg, ffmpeg-converts, returns
+  transcript; tested live with ogg upload -> "Liberia." (also tests conversion path)
+- Report modal: real transcribe-on-stop with loading/error states, transcript fills editable
+  report text, then normal Sentinel extraction on submit
+- Image analysis: SKIPPED as stretch goal (key lists muse-image-1.0 but time prioritized elsewhere)
+
 ## Assumptions
 - META_API_KEY in .env is the Model API key (48 chars, LLM_ prefix matches docs format) — confirmed working
 - Gazetteer over model coords: deliberate anti-fabrication design

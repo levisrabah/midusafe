@@ -161,26 +161,37 @@ class MetaService:
         return self._request("POST", "/chat/completions", payload, timeout=timeout)
 
     def transcribe_file(self, audio_bytes, filename="report.wav",
-                        language=None, timeout=None):
+                        language_bias=None, keywords=None, mode="ENDPOINTING",
+                        timeout=None):
         """POST /v1/asr/transcribe - file transcription (Muse Voice Transcribe).
 
-        Verified against the key at runtime; raises MetaAPIError on failure.
+        Documented contract (dev.meta.ai/docs/speech-to-text): multipart with
+        a `request` JSON part and an `audio` WAV part (mono 16-bit PCM,
+        16/24 kHz), plus ?sessionId=. Raises MetaAPIError on failure.
         """
+        import json as _json
+        import uuid as _uuid
         if not self.configured:
             raise MetaAuthError("Meta API key is not configured (set META_API_KEY).")
-        url = f"{self.base_url}/asr/transcribe"
+        session_id = f"sentinel-{_uuid.uuid4().hex[:12]}"
+        url = f"{self.base_url}/asr/transcribe?sessionId={session_id}"
+        request_part = {"mode": mode, "model": "muse-voice-transcribe-1.0",
+                        "audioEncoding": "WAV"}
+        if language_bias:
+            request_part["languageBias"] = language_bias
+        if keywords:
+            request_part["keywords"] = keywords
         last_err = None
         for attempt in range(self.max_retries + 1):
             try:
-                files = {"file": (filename, audio_bytes)}
-                form = {"model": "muse-voice-transcribe-1.0"}
-                if language:
-                    form["language"] = language
+                files = {
+                    "request": (None, _json.dumps(request_part), "application/json"),
+                    "audio": (filename, audio_bytes, "audio/wav"),
+                }
                 resp = self._session.post(
                     url,
                     headers={"Authorization": f"Bearer {self.api_key}"},
                     files=files,
-                    data=form,
                     timeout=timeout or 90,
                 )
             except requests.Timeout as e:

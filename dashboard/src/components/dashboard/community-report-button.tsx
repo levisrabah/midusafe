@@ -92,11 +92,39 @@ export default function CommunityReportButton() {
     }
   };
   
+  const [isTranscribing, setIsTranscribing] = useState(false);
+  const [transcribeError, setTranscribeError] = useState('');
+
   const transcribeAudio = async (audioBlob: Blob) => {
-    // For now, we'll use a placeholder transcription
-    // In a real implementation, you'd send this to a speech-to-text service
-    setTranscript("Voice transcription would appear here. This is a placeholder for the actual speech-to-text functionality.");
-    setReportText("Voice transcription would appear here. This is a placeholder for the actual speech-to-text functionality.");
+    // Real transcription via backend -> Meta Voice Transcribe.
+    setIsTranscribing(true);
+    setTranscribeError('');
+    setTranscript('');
+    try {
+      const form = new FormData();
+      form.append('audio', audioBlob, 'voice_report.webm');
+      const response = await fetch('http://localhost:8000/api/sentinel/voice/transcribe', {
+        method: 'POST',
+        body: form,
+      });
+      if (!response.ok) {
+        const text = await response.text().catch(() => '');
+        throw new Error(text.slice(0, 160) || `HTTP ${response.status}`);
+      }
+      const data = await response.json();
+      const text: string = data.transcript || '';
+      if (!text) {
+        setTranscribeError(data.warning || 'No speech detected. Please try again or type your report.');
+        return;
+      }
+      setTranscript(text);
+      setReportText(text);
+    } catch (error) {
+      console.error('Transcription failed:', error);
+      setTranscribeError(`Transcription failed (${error instanceof Error ? error.message : 'network error'}). You can still type your report.`);
+    } finally {
+      setIsTranscribing(false);
+    }
   };
   
   const formatTime = (seconds: number) => {
@@ -304,18 +332,26 @@ export default function CommunityReportButton() {
                     </div>
                   )}
                   
-                  {audioBlob && (
+                  {(audioBlob || isTranscribing) && (
                     <div className="space-y-3">
                       <div className="bg-zinc-800/50 rounded-lg p-3">
-                        <p className="text-xs text-zinc-400 mb-1">Transcription:</p>
-                        <p className="text-sm text-zinc-200">{transcript}</p>
+                        <p className="text-xs text-zinc-400 mb-1">Transcription (Meta Voice Transcribe):</p>
+                        {isTranscribing ? (
+                          <p className="text-sm text-zinc-400 animate-pulse">Transcribing your recording…</p>
+                        ) : (
+                          <p className="text-sm text-zinc-200">{transcript || '—'}</p>
+                        )}
+                        {transcribeError && (
+                          <p className="text-xs text-amber-300 mt-1">{transcribeError}</p>
+                        )}
                       </div>
-                      
+
                       <button
                         type="button"
                         onClick={() => {
                           setAudioBlob(null);
                           setTranscript('');
+                          setTranscribeError('');
                           setRecordingTime(0);
                         }}
                         className="w-full py-2 bg-zinc-700 hover:bg-zinc-600 text-white rounded-lg transition-colors"

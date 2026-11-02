@@ -4,7 +4,7 @@ import uuid
 import re
 import time
 import asyncio
-from fastapi import FastAPI, WebSocket, WebSocketDisconnect, HTTPException, BackgroundTasks
+from fastapi import FastAPI, WebSocket, WebSocketDisconnect, HTTPException, BackgroundTasks, UploadFile, File
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from typing import List, Optional
@@ -384,6 +384,63 @@ async def sentinel_health():
     from meta_service import meta_service
     return {"ok": True, "meta_configured": meta_service.configured,
             "meta_model": meta_service.model, "meta_base_url": meta_service.base_url}
+
+
+@app.post("/api/sentinel/voice/transcribe")
+async def transcribe_voice_report(audio: UploadFile = File(...),
+                                  language_bias: Optional[str] = None):
+    """Record -> backend -> Meta Voice Transcribe -> transcript text.
+
+    Accepts browser recordings (webm/wav/mp3/ogg); converts to the documented
+    16kHz mono WAV via ffmpeg, then transcribes. Returns transcript for the
+    reporter to review before submitting as a text report for extraction.
+    """
+    import shutil
+    import subprocess
+    import tempfile
+    from meta_service import meta_service
+    raw = await audio.read()
+    if not raw or len(raw) < 100:
+        raise HTTPException(status_code=400, detail="Empty or tiny audio upload")
+    if len(raw) > 10 * 1024 * 1024:
+        raise HTTPException(status_code=400, detail="Audio too large (max 10 MB)")
+    if not shutil.which("ffmpeg"):
+        raise HTTPException(status_code=501,
+                            detail="Server audio conversion (ffmpeg) unavailable")
+    with tempfile.NamedTemporaryFile(suffix="_in", delete=False) as fin:
+        fin.write(raw)
+        in_path = fin.name
+    out_path = in_path + "_16k.wav"
+    try:
+        proc = subprocess.run(
+            ["ffmpeg", "-y", "-i", in_path, "-ac", "1", "-ar", "16000",
+             "-c:a", "pcm_s16le", "-map_metadata", "-1", "-f", "wav", out_path],
+            capture_output=True, timeout=60)
+        if proc.returncode != 0 or not os.path.exists(out_path):
+            raise HTTPException(status_code=400,
+                                detail="Could not decode audio; use wav/mp3/webm/ogg")
+        with open(out_path, "rb") as f:
+            wav_bytes = f.read()
+    except subprocess.TimeoutExpired:
+        raise HTTPException(status_code=504, detail="Audio conversion timed out")
+    finally:
+        for p in (in_path, out_path):
+            try:
+                os.remove(p)
+            except OSError:
+                pass
+    bias = [b.strip() for b in language_bias.split(",")] if language_bias else None
+    try:
+        result = meta_service.transcribe_file(wav_bytes, filename="voice_report.wav",
+                                              language_bias=bias)
+    except MetaAPIError as e:
+        raise HTTPException(status_code=502, detail=f"Transcription failed: {e}")
+    transcript = (result.get("transcript") or "").strip()
+    if not transcript:
+        return {"transcript": "", "duration_ms": result.get("audioDurationMs", 0),
+                "warning": "No speech detected in the recording."}
+    return {"transcript": transcript, "duration_ms": result.get("audioDurationMs", 0),
+            "turns": result.get("turns", [])}
 
 if __name__ == "__main__":
     import uvicorn
