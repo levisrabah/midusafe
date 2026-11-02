@@ -75,6 +75,17 @@ Baseline: commit tagged `pre-hackathon`. Everything below is new hackathon work.
   report text, then normal Sentinel extraction on submit
 - Image analysis: SKIPPED as stretch goal (key lists muse-image-1.0 but time prioritized elsewhere)
 
+## New: Step 9 — Tests + measured eval
+- `tests/` (19 pytest, all passing): multilingual extraction, invalid JSON + schema
+  violations rejected, missing/unknown location stays unresolved, dup scoring + reasons +
+  no-merge + confirm flow, verify/request_info/reclassify/priority/note + audit trail,
+  brief citation enforcement w/ fallback, Meta timeout/retries/rate-limit/auth/key-redaction
+- `requirements.txt`: added requests, httpx==0.27.2 (TestClient compat), python-multipart, pytest
+- `data/sentinel_eval.jsonl` (18 fictional reports) + `scripts/run_eval.py`, MEASURED live:
+  validity 1.0, type acc 1.0 (18/18), lang acc 0.944 (17/18; one sh/sw code-switch),
+  location match 1.0, severity-band acc 0.778 (14/18, all adjacent-band judgment calls),
+  urgency MAE 0.67, avg latency 8.0s. Full per-item results in `data/sentinel_eval_results.json`
+
 ## Assumptions
 - META_API_KEY in .env is the Model API key (48 chars, LLM_ prefix matches docs format) — confirmed working
 - Gazetteer over model coords: deliberate anti-fabrication design

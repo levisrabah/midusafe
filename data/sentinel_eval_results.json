@@ -1,0 +1,465 @@
+{
+  "summary": {
+    "n": 18,
+    "structured_validity": 1.0,
+    "type_accuracy": 1.0,
+    "language_accuracy": 0.944,
+    "location_resolution_match": 1.0,
+    "severity_band_accuracy": 0.778,
+    "urgency_mae": 0.67,
+    "avg_latency_s": 8.0,
+    "note": "Reference labels are the author's judgment on fictional reports, not ground truth. Severity/urgency measure agreement, not correctness."
+  },
+  "items": [
+    {
+      "id": 1,
+      "valid_json": true,
+      "latency_s": 8.3,
+      "expected": {
+        "detected_language": "en",
+        "incident_type": "flood",
+        "resolved": true,
+        "severity": "high",
+        "urgency": 8
+      },
+      "got": {
+        "incident_type": "flood",
+        "detected_language": "en",
+        "resolved": true,
+        "severity": "high",
+        "urgency": 8
+      },
+      "error": "",
+      "type_match": true,
+      "lang_match": true,
+      "resolved_match": true,
+      "sev_band_match": true,
+      "urgency_abs_err": 0
+    },
+    {
+      "id": 2,
+      "valid_json": true,
+      "latency_s": 9.9,
+      "expected": {
+        "detected_language": "sw",
+        "incident_type": "flood",
+        "resolved": true,
+        "severity": "high",
+        "urgency": 8
+      },
+      "got": {
+        "incident_type": "flood",
+        "detected_language": "sw",
+        "resolved": true,
+        "severity": "high",
+        "urgency": 8
+      },
+      "error": "",
+      "type_match": true,
+      "lang_match": true,
+      "resolved_match": true,
+      "sev_band_match": true,
+      "urgency_abs_err": 0
+    },
+    {
+      "id": 3,
+      "valid_json": true,
+      "latency_s": 8.1,
+      "expected": {
+        "detected_language": "sh",
+        "incident_type": "flood",
+        "resolved": true,
+        "severity": "high",
+        "urgency": 7
+      },
+      "got": {
+        "incident_type": "flood",
+        "detected_language": "sh",
+        "resolved": true,
+        "severity": "high",
+        "urgency": 8
+      },
+      "error": "",
+      "type_match": true,
+      "lang_match": true,
+      "resolved_match": true,
+      "sev_band_match": true,
+      "urgency_abs_err": 1
+    },
+    {
+      "id": 4,
+      "valid_json": true,
+      "latency_s": 5.2,
+      "expected": {
+        "detected_language": "en",
+        "incident_type": "flood",
+        "resolved": false,
+        "severity": "moderate",
+        "urgency": 5
+      },
+      "got": {
+        "incident_type": "flood",
+        "detected_language": "en",
+        "resolved": false,
+        "severity": "moderate",
+        "urgency": 5
+      },
+      "error": "",
+      "type_match": true,
+      "lang_match": true,
+      "resolved_match": true,
+      "sev_band_match": true,
+      "urgency_abs_err": 0
+    },
+    {
+      "id": 5,
+      "valid_json": true,
+      "latency_s": 7.0,
+      "expected": {
+        "detected_language": "sw",
+        "incident_type": "flood",
+        "resolved": false,
+        "severity": "moderate",
+        "urgency": 5
+      },
+      "got": {
+        "incident_type": "flood",
+        "detected_language": "sw",
+        "resolved": false,
+        "severity": "moderate",
+        "urgency": 5
+      },
+      "error": "",
+      "type_match": true,
+      "lang_match": true,
+      "resolved_match": true,
+      "sev_band_match": true,
+      "urgency_abs_err": 0
+    },
+    {
+      "id": 6,
+      "valid_json": true,
+      "latency_s": 5.4,
+      "expected": {
+        "detected_language": "en",
+        "incident_type": "fire",
+        "resolved": true,
+        "severity": "low",
+        "urgency": 3
+      },
+      "got": {
+        "incident_type": "fire",
+        "detected_language": "en",
+        "resolved": true,
+        "severity": "low",
+        "urgency": 4
+      },
+      "error": "",
+      "type_match": true,
+      "lang_match": true,
+      "resolved_match": true,
+      "sev_band_match": true,
+      "urgency_abs_err": 1
+    },
+    {
+      "id": 7,
+      "valid_json": true,
+      "latency_s": 6.4,
+      "expected": {
+        "detected_language": "sw",
+        "incident_type": "flood",
+        "resolved": true,
+        "severity": "high",
+        "urgency": 7
+      },
+      "got": {
+        "incident_type": "flood",
+        "detected_language": "sw",
+        "resolved": true,
+        "severity": "high",
+        "urgency": 7
+      },
+      "error": "",
+      "type_match": true,
+      "lang_match": true,
+      "resolved_match": true,
+      "sev_band_match": true,
+      "urgency_abs_err": 0
+    },
+    {
+      "id": 8,
+      "valid_json": true,
+      "latency_s": 16.8,
+      "expected": {
+        "detected_language": "sw",
+        "incident_type": "flood",
+        "resolved": true,
+        "severity": "high",
+        "urgency": 7
+      },
+      "got": {
+        "incident_type": "flood",
+        "detected_language": "sw",
+        "resolved": true,
+        "severity": "moderate",
+        "urgency": 6
+      },
+      "error": "",
+      "type_match": true,
+      "lang_match": true,
+      "resolved_match": true,
+      "sev_band_match": false,
+      "urgency_abs_err": 1
+    },
+    {
+      "id": 9,
+      "valid_json": true,
+      "latency_s": 5.1,
+      "expected": {
+        "detected_language": "en",
+        "incident_type": "road_blockage",
+        "resolved": true,
+        "severity": "moderate",
+        "urgency": 5
+      },
+      "got": {
+        "incident_type": "road_blockage",
+        "detected_language": "en",
+        "resolved": true,
+        "severity": "moderate",
+        "urgency": 6
+      },
+      "error": "",
+      "type_match": true,
+      "lang_match": true,
+      "resolved_match": true,
+      "sev_band_match": true,
+      "urgency_abs_err": 1
+    },
+    {
+      "id": 10,
+      "valid_json": true,
+      "latency_s": 5.3,
+      "expected": {
+        "detected_language": "en",
+        "incident_type": "structural_collapse",
+        "resolved": true,
+        "severity": "critical",
+        "urgency": 10
+      },
+      "got": {
+        "incident_type": "structural_collapse",
+        "detected_language": "en",
+        "resolved": true,
+        "severity": "critical",
+        "urgency": 10
+      },
+      "error": "",
+      "type_match": true,
+      "lang_match": true,
+      "resolved_match": true,
+      "sev_band_match": true,
+      "urgency_abs_err": 0
+    },
+    {
+      "id": 11,
+      "valid_json": true,
+      "latency_s": 11.7,
+      "expected": {
+        "detected_language": "sw",
+        "incident_type": "medical",
+        "resolved": true,
+        "severity": "high",
+        "urgency": 8
+      },
+      "got": {
+        "incident_type": "medical",
+        "detected_language": "sw",
+        "resolved": true,
+        "severity": "critical",
+        "urgency": 9
+      },
+      "error": "",
+      "type_match": true,
+      "lang_match": true,
+      "resolved_match": true,
+      "sev_band_match": true,
+      "urgency_abs_err": 1
+    },
+    {
+      "id": 12,
+      "valid_json": true,
+      "latency_s": 6.0,
+      "expected": {
+        "detected_language": "en",
+        "incident_type": "landslide",
+        "resolved": false,
+        "severity": "high",
+        "urgency": 8
+      },
+      "got": {
+        "incident_type": "landslide",
+        "detected_language": "en",
+        "resolved": false,
+        "severity": "moderate",
+        "urgency": 6
+      },
+      "error": "",
+      "type_match": true,
+      "lang_match": true,
+      "resolved_match": true,
+      "sev_band_match": false,
+      "urgency_abs_err": 2
+    },
+    {
+      "id": 13,
+      "valid_json": true,
+      "latency_s": 6.2,
+      "expected": {
+        "detected_language": "sh",
+        "incident_type": "fire",
+        "resolved": true,
+        "severity": "high",
+        "urgency": 8
+      },
+      "got": {
+        "incident_type": "fire",
+        "detected_language": "sw",
+        "resolved": true,
+        "severity": "high",
+        "urgency": 8
+      },
+      "error": "",
+      "type_match": true,
+      "lang_match": false,
+      "resolved_match": true,
+      "sev_band_match": true,
+      "urgency_abs_err": 0
+    },
+    {
+      "id": 14,
+      "valid_json": true,
+      "latency_s": 6.8,
+      "expected": {
+        "detected_language": "en",
+        "incident_type": "drought",
+        "resolved": true,
+        "severity": "moderate",
+        "urgency": 4
+      },
+      "got": {
+        "incident_type": "drought",
+        "detected_language": "en",
+        "resolved": true,
+        "severity": "high",
+        "urgency": 7
+      },
+      "error": "",
+      "type_match": true,
+      "lang_match": true,
+      "resolved_match": true,
+      "sev_band_match": false,
+      "urgency_abs_err": 3
+    },
+    {
+      "id": 15,
+      "valid_json": true,
+      "latency_s": 15.2,
+      "expected": {
+        "detected_language": "sw",
+        "incident_type": "storm",
+        "resolved": true,
+        "severity": "moderate",
+        "urgency": 6
+      },
+      "got": {
+        "incident_type": "storm",
+        "detected_language": "sw",
+        "resolved": true,
+        "severity": "moderate",
+        "urgency": 6
+      },
+      "error": "",
+      "type_match": true,
+      "lang_match": true,
+      "resolved_match": true,
+      "sev_band_match": true,
+      "urgency_abs_err": 0
+    },
+    {
+      "id": 16,
+      "valid_json": true,
+      "latency_s": 8.9,
+      "expected": {
+        "detected_language": "en",
+        "incident_type": "displacement",
+        "resolved": true,
+        "severity": "moderate",
+        "urgency": 6
+      },
+      "got": {
+        "incident_type": "displacement",
+        "detected_language": "en",
+        "resolved": true,
+        "severity": "high",
+        "urgency": 7
+      },
+      "error": "",
+      "type_match": true,
+      "lang_match": true,
+      "resolved_match": true,
+      "sev_band_match": false,
+      "urgency_abs_err": 1
+    },
+    {
+      "id": 17,
+      "valid_json": true,
+      "latency_s": 8.3,
+      "expected": {
+        "detected_language": "sw",
+        "incident_type": "gas_leak",
+        "resolved": true,
+        "severity": "high",
+        "urgency": 8
+      },
+      "got": {
+        "incident_type": "gas_leak",
+        "detected_language": "sw",
+        "resolved": true,
+        "severity": "high",
+        "urgency": 8
+      },
+      "error": "",
+      "type_match": true,
+      "lang_match": true,
+      "resolved_match": true,
+      "sev_band_match": true,
+      "urgency_abs_err": 0
+    },
+    {
+      "id": 18,
+      "valid_json": true,
+      "latency_s": 3.5,
+      "expected": {
+        "detected_language": "en",
+        "incident_type": "other",
+        "resolved": false,
+        "severity": "low",
+        "urgency": 2
+      },
+      "got": {
+        "incident_type": "other",
+        "detected_language": "en",
+        "resolved": false,
+        "severity": "minimal",
+        "urgency": 1
+      },
+      "error": "",
+      "type_match": true,
+      "lang_match": true,
+      "resolved_match": true,
+      "sev_band_match": true,
+      "urgency_abs_err": 1
+    }
+  ]
+}
