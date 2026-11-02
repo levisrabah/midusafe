@@ -8,7 +8,19 @@ from fastapi import FastAPI, WebSocket, WebSocketDisconnect, HTTPException, Back
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from typing import List, Optional
-from triage import analyze_report
+try:
+    from triage import analyze_report, TRIAGE_AVAILABLE
+except Exception as e:  # google SDK missing etc: legacy /report degrades, Sentinel unaffected
+    print(f"Legacy triage unavailable, /report degraded: {e}")
+    TRIAGE_AVAILABLE = False
+
+    def analyze_report(text):
+        return ('{"original_text": "", "detected_language": "en", '
+                '"english_summary": "Legacy triage unavailable", '
+                '"urgency_score": 5, "suggested_actions": "Manual review required", '
+                '"cultural_context": "", "disaster_type": "other", '
+                '"location_lat": 0.0, "location_lng": 0.0, '
+                '"confidence": 0.1, "degraded": true}')
 from urgency_intelligence import calculate_urgency_score, urgency_intelligence
 from language_intelligence import detect_language_enhanced, language_intelligence as lang_intel
 from disaster_severity import classify_disaster_severity, disaster_classifier
@@ -445,4 +457,7 @@ async def transcribe_voice_report(audio: UploadFile = File(...),
 if __name__ == "__main__":
     import uvicorn
     print("System Audit Complete: Pan-African Resilience Engine Online")
+    if not TRIAGE_AVAILABLE:
+        print("NOTE: legacy /report triage is DEGRADED (Gemini SDK not installed). "
+              "Sentinel endpoints are fully operational.")
     uvicorn.run(app, host="0.0.0.0", port=8000)

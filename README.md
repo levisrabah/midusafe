@@ -67,6 +67,8 @@ See [ARCHITECTURE.md](ARCHITECTURE.md). API key stays server-side; frontend neve
 cd /home/levis/midusafe
 python3 -m venv venv && source venv/bin/activate
 pip install -r requirements.txt
+# Optional: legacy Gemini /report endpoint only (Sentinel needs no google packages)
+pip install -r requirements-legacy.txt
 cp .env.example .env   # then set META_API_KEY
 
 # Frontend
@@ -89,6 +91,8 @@ venv/bin/python scripts/seed_demo.py --reset
 ```
 
 Legacy simulation still works: `python3 simulation.py` posts to `/report` (Gemini path).
+Without `requirements-legacy.txt` installed, `/report` accepts reports but returns a
+clearly flagged degraded analysis; all Sentinel endpoints are unaffected.
 
 ## Testing
 

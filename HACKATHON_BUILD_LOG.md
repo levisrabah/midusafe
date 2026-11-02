@@ -91,6 +91,14 @@ Baseline: commit tagged `pre-hackathon`. Everything below is new hackathon work.
   `DEMO_SCRIPT.md` (3-min), `.env.example` (no secrets), this log
 - `.env` confirmed gitignored (`git check-ignore .env` → ignored)
 
+## Post-hackathon: legacy dependency split
+- `google-generativeai` + `google-genai` moved to `requirements-legacy.txt`;
+  `requirements.txt` carries only what Sentinel needs (httpx==0.27.2 for TestClient compat)
+- `triage.py` / `main.py` import the Gemini SDK only if installed; without it `/report`
+  returns a `degraded: true` fallback while Sentinel endpoints work normally
+- Verified from fresh /tmp venv: install OK (no google pkgs), 19/19 pytest, backend serves
+  both paths, `seed_demo.py --reset` 8/8 (seed now uses `sys.executable`)
+
 ## Known limitations
 - Gazetteer is Kenya-demo-scoped (~25 places); unlisted places stay unresolved by design
 - Languages tested live: English, Swahili, Sheng only; no broader coverage claimed

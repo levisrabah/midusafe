@@ -41,7 +41,7 @@ def main():
     reports = scenario["reports"]
     print(f"Seeding {len(reports)} FICTIONAL reports (Mathare flood scenario)...")
 
-    proc = subprocess.Popen(["venv/bin/python", "main.py"],
+    proc = subprocess.Popen([sys.executable, "main.py"],
                             stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True)
     try:
         if not wait_for_server(proc):

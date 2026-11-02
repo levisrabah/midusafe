@@ -1,18 +1,54 @@
 import os
-from google import genai
 from dotenv import load_dotenv
 from urgency_intelligence import calculate_urgency_score
 # 1. Load environment variables from a .env file
 load_dotenv()
 
-# 2. Initialize the client EXPLICITLY for Gemini Developer API (AI Studio)
+# 2. Import the Gemini SDK only if installed (requirements-legacy.txt).
+# Without it, analyze_report() returns a degraded fallback instead of crashing.
+try:
+    from google import genai
+except ImportError:
+    genai = None
+
+# Initialize the client EXPLICITLY for Gemini Developer API (AI Studio)
 # vertexai=False tells the SDK to use your AI Studio API key, not a Google Cloud account.
-client = genai.Client(
-    api_key=os.getenv("GEMINI_API_KEY"),
-    vertexai=False 
-)
+client = None
+if genai is not None:
+    try:
+        client = genai.Client(
+            api_key=os.getenv("GEMINI_API_KEY"),
+            vertexai=False
+        )
+    except Exception as e:
+        print(f"Gemini client init failed, legacy triage degraded: {e}")
+        client = None
+
+TRIAGE_AVAILABLE = client is not None
+
+
+def _degraded_response(text, note):
+    """Valid fallback payload when Gemini is unavailable (missing SDK/key)."""
+    intelligent_urgency = calculate_urgency_score(text)
+    return f"""{{
+        "original_text": "{text}",
+        "detected_language": "en",
+        "english_summary": "Legacy triage degraded: {note}",
+        "urgency_score": {intelligent_urgency},
+        "suggested_actions": "Manual review required for this report",
+        "cultural_context": "Legacy Gemini path unavailable",
+        "disaster_type": "other",
+        "location_lat": 0.0,
+        "location_lng": 0.0,
+        "confidence": 0.1,
+        "degraded": true,
+        "error": "{note}"
+    }}"""
 
 def analyze_report(text):
+    if not TRIAGE_AVAILABLE:
+        return _degraded_response(
+            text, "Gemini SDK not installed (pip install -r requirements-legacy.txt)")
     prompt = f"""
     You are a Pan-African Crisis Dispatcher specializing in multilingual disaster triage across the entire African continent.
     You must support ALL languages including Sheng, Swahili, Dholuo, Amharic, French, Portuguese, Arabic, Hausa, Yoruba, Igbo, Zulu, Xhosa, Afrikaans, Somali, Amharic, Tigrinya, Oromo, Wolof, and any other African language or dialect.
