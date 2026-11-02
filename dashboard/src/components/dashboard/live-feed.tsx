@@ -146,12 +146,17 @@ export default function LiveFeed({ alerts }: LiveFeedProps) {
                   </div>
                 )}
 
-                {alert.location && (
+                {alert.location && typeof alert.location.lat === 'number' && typeof alert.location.lng === 'number' ? (
                   <div className="flex items-center gap-1 text-xs text-zinc-500">
                     <MapPin className="h-3 w-3" />
                     <span>
                       {alert.location.lat.toFixed(4)}, {alert.location.lng.toFixed(4)}
                     </span>
+                  </div>
+                ) : (
+                  <div className="flex items-center gap-1 text-xs text-amber-300/80">
+                    <MapPin className="h-3 w-3" />
+                    <span>Location unresolved</span>
                   </div>
                 )}
 

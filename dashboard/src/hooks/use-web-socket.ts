@@ -15,6 +15,11 @@ export function useWebSocket<T>(url: string) {
     ws.current.onmessage = (event) => {
       try {
         const message = JSON.parse(event.data);
+        // Sentinel incidents have their own feed (REST polling); skip here
+        // to avoid null-coordinate shapes in the legacy feed.
+        if (message.sentin || message.type === 'sentinel_incident' || message.type === 'sentinel_error') {
+          return;
+        }
         // Map the disaster type and ensure proper Alert structure
         const alert: Alert = {
           id: message.id,

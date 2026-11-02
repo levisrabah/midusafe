@@ -3,7 +3,7 @@
 import { useState, useCallback, useEffect } from 'react';
 import { Alert } from '@/types/alert';
 
-interface ToastNotification {
+export interface ToastNotification {
   id: string;
   message: string;
   type: 'success' | 'error' | 'info';

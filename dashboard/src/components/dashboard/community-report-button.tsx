@@ -120,14 +120,16 @@ export default function CommunityReportButton() {
     setIsSubmitting(true);
     
     try {
-      const response = await fetch('http://localhost:8000/report', {
+      // Sentinel path: Meta AI extraction, validation, storage, live broadcast.
+      const response = await fetch('http://localhost:8000/api/sentinel/reports', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
           message: reportText,
-          location: location || 'Unknown Location',
+          location_hint: location || null,
+          is_simulated: false,
         }),
       });
 

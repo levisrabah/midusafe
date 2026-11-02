@@ -10,6 +10,10 @@ const disasterIcons: Record<DisasterType, React.ReactElement> = {
   Earthquake: <Zap className="h-5 w-5" />,
   Tornado: <Wind className="h-5 w-5" />,
   Volcano: <Mountain className="h-5 w-5" />,
+  fire: <Flame className="h-5 w-5" />,
+  flood: <Waves className="h-5 w-5" />,
+  medical: <Zap className="h-5 w-5" />,
+  other: <Wind className="h-5 w-5" />,
 };
 
 const UrgencyIndicator = ({ urgency }: { urgency: number }) => {
@@ -99,7 +103,7 @@ export default function AiTriageCard({ alert }: { alert: Alert }) {
                 <span className="font-semibold">{alert.disaster_type}</span>
               </Badge>
               <span className="text-xs font-semibold text-zinc-400 bg-zinc-800 px-2 py-1 rounded">
-                {getLanguageBadge(alert.detected_language, alert.detected_language_label)}
+                {getLanguageBadge(alert.detected_language || 'en', (alert as any).detected_language_label)}
               </span>
             </div>
             <p className="mt-1 text-xs text-zinc-400">{new Date(alert.timestamp).toLocaleString()}</p>
@@ -116,7 +120,7 @@ export default function AiTriageCard({ alert }: { alert: Alert }) {
       
       {/* English translation */}
       <div className="mt-3 p-3 bg-zinc-900/50 rounded">
-        <p className="text-sm text-zinc-200">{alert.english_summary || alert.translated_summary || alert.summary}</p>
+        <p className="text-sm text-zinc-200">{alert.english_summary || (alert as any).translated_summary || alert.summary}</p>
       </div>
       
       {/* Suggested actions */}
@@ -126,7 +130,7 @@ export default function AiTriageCard({ alert }: { alert: Alert }) {
         </div>
       )}
       
-      <AIAnalysis summary={alert.english_summary || alert.summary} urgency={alert.urgency_score || alert.urgency} />
+      <AIAnalysis alert={alert} />
     </motion.div>
   );
 }
