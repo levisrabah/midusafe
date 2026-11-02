@@ -3,6 +3,7 @@
 
 ![MIDUSAFE](https://img.shields.io/badge/MIDUSAFE-Pan--African-Red) ![License](https://img.shields.io/badge/License-MIT-blue) ![Python](https://img.shields.io/badge/Python-3.8+-green) ![Next.js](https://img.shields.io/badge/Next.js-14+-black) ![Climate Hackathon](https://img.shields.io/badge/Climate-Hackathon-orange)
 
+
 **MIDUSAFE** is a high-performance AI command center designed for disaster response and climate resilience across the African continent. It transforms the "noise" of a crisis—fragmented social media feeds, sensor data, and satellite imagery—into a single, actionable **Common Operational Picture (COP)**.
 
 ---
