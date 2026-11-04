@@ -26,6 +26,17 @@ export const sentinelApi = {
     req<{ report: import('@/types/sentinel').ContradictionReport; method: string }>(
       `/api/sentinel/incidents/${id}/contradictions${refresh ? '?refresh=true' : ''}`
     ),
+  draftFollowup: (id: string) =>
+    req<{ draft: import('@/types/sentinel').FollowupDraft | null; method: string; note: string }>(
+      `/api/sentinel/incidents/${id}/followups`, { method: 'POST' }
+    ),
+  listFollowups: (id: string) =>
+    req<import('@/types/sentinel').FollowupDraft[]>(`/api/sentinel/incidents/${id}/followups`),
+  decideFollowup: (draftId: string, decision: 'approved' | 'discarded', edited_text?: string) =>
+    req<{ draft: import('@/types/sentinel').FollowupDraft; status: string }>(
+      `/api/sentinel/followups/${draftId}/decision`,
+      { method: 'POST', body: JSON.stringify({ decision, edited_text }) }
+    ),
   listDuplicates: (status?: string) =>
     req<import('@/types/sentinel').DupLink[]>(
       `/api/sentinel/duplicates${status ? `?status=${status}` : ''}`

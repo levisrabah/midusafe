@@ -81,6 +81,16 @@ export interface ContradictionReport {
   note: string;
 }
 
+export interface FollowupDraft {
+  id: string;
+  incident_id: string;
+  language: string;
+  draft_text: string;
+  status: string;
+  created_at: string;
+  decided_at: string | null;
+}
+
 export interface AuditEntry {
   id: string;
   timestamp: string;

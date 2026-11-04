@@ -230,3 +230,30 @@ STRICT RULES:
 2. Each contradiction must cite the two source report ids it comes from, using ONLY ids from the provided reports. Never cite an id you were not given.
 3. Quote each claim faithfully in a few words. If there are no contradictions, return an empty list.
 4. Never invent facts, and never resolve the conflict yourself - a human verifies on the ground."""
+
+
+class FollowupDraftText(BaseModel):
+    """Validated Meta-model output: one short question in the given language."""
+
+    draft_text: str = Field(min_length=1, max_length=500)
+    language: str = Field(min_length=2, max_length=16)
+
+
+FOLLOWUP_JSON_SCHEMA = {
+    "type": "object",
+    "properties": {
+        "draft_text": {"type": "string"},
+        "language": {"type": "string",
+                     "description": "Language code of draft_text, e.g. en, sw, sh"},
+    },
+    "required": ["draft_text", "language"],
+    "additionalProperties": False,
+}
+
+FOLLOWUP_SYSTEM_PROMPT = """You write ONE short follow-up question for an emergency reporter.
+
+STRICT RULES:
+1. Write in the requested language ONLY (same language the reporter used).
+2. One question, under 30 words, asking for the single most important missing detail.
+3. Be polite and direct. Never invent facts about the incident.
+4. Return ONLY the question text and its language code."""

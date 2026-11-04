@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { AlertTriangle, Brain, Check, Copy, FileText, History, MapPin, ShieldCheck, X } from 'lucide-react';
 import { sentinelApi } from '@/lib/sentinel-api';
-import { AuditEntry, ContradictionReport, DupLink, IntelBrief, SentinelIncident } from '@/types/sentinel';
+import { AuditEntry, ContradictionReport, DupLink, FollowupDraft, IntelBrief, SentinelIncident } from '@/types/sentinel';
 
 export default function IncidentDetail({
   incident, duplicates, onClose, onChanged,
@@ -20,6 +20,11 @@ export default function IncidentDetail({
   const [contra, setContra] = useState<ContradictionReport | null>(null);
   const [contraMethod, setContraMethod] = useState<string>('');
   const [contraLoading, setContraLoading] = useState(false);
+  const [followups, setFollowups] = useState<FollowupDraft[]>([]);
+  const [followupLoading, setFollowupLoading] = useState(false);
+  const [followupNote, setFollowupNote] = useState('');
+  const [editingId, setEditingId] = useState<string | null>(null);
+  const [editText, setEditText] = useState('');
   const [audit, setAudit] = useState<AuditEntry[]>([]);
   const [busy, setBusy] = useState<string | null>(null);
   const [note, setNote] = useState('');
@@ -36,6 +41,10 @@ export default function IncidentDetail({
     setBriefMethod('');
     setContra(null);
     setContraMethod('');
+    setFollowups([]);
+    setFollowupNote('');
+    setEditingId(null);
+    sentinelApi.listFollowups(incident.id).then(setFollowups).catch(() => setFollowups([]));
     setNote('');
     setReclass(incident.extraction.incident_type);
     sentinelApi.audit().then((a) =>
@@ -66,6 +75,35 @@ export default function IncidentDetail({
       setContra(null);
     } finally {
       setContraLoading(false);
+    }
+  };
+
+  const draftFollowup = async () => {
+    setFollowupLoading(true);
+    setFollowupNote('');
+    try {
+      const res = await sentinelApi.draftFollowup(incident.id);
+      if (res.draft) {
+        setFollowups((f) => [res.draft as FollowupDraft, ...f]);
+      }
+      if (res.note) setFollowupNote(res.note);
+    } catch {
+      setFollowupNote('Draft failed. Try again.');
+    } finally {
+      setFollowupLoading(false);
+    }
+  };
+
+  const decideFollowup = async (draftId: string, decision: 'approved' | 'discarded', edited?: string) => {
+    setBusy(draftId);
+    try {
+      await sentinelApi.decideFollowup(draftId, decision, edited);
+      const list = await sentinelApi.listFollowups(incident.id);
+      setFollowups(list);
+      setEditingId(null);
+      onChanged();
+    } finally {
+      setBusy(null);
     }
   };
 
@@ -243,6 +281,50 @@ export default function IncidentDetail({
               </button>
             </div>
           )}
+        </section>
+
+        {/* Approval queue: follow-up drafts */}
+        <section className="glass-card rounded-lg p-3">
+          <h4 className="text-xs font-semibold text-zinc-400 mb-2 flex items-center gap-1">
+            <FileText className="h-3 w-3" /> APPROVAL QUEUE ({followups.filter((f) => f.status === 'pending').length} pending)
+          </h4>
+          <button onClick={draftFollowup} disabled={followupLoading}
+            className="w-full text-sm py-2 bg-sky-600/80 hover:bg-sky-600 disabled:opacity-50 text-white rounded-lg mb-2">
+            {followupLoading ? 'Drafting…' : `Draft follow-up in reporter's language [${ex.detected_language}]`}
+          </button>
+          {followupNote && <p className="text-xs text-zinc-500 mb-2">{followupNote}</p>}
+          {followups.length === 0 && <p className="text-xs text-zinc-600">No drafts yet.</p>}
+          {followups.map((f) => (
+            <div key={f.id} className="bg-zinc-900/60 rounded p-2 mb-2">
+              <p className="text-xs text-zinc-300">“{f.draft_text}”</p>
+              <p className="text-[11px] text-zinc-500 mt-1">
+                [{f.language}] · {f.status === 'approved' ? 'approved, ready to send' : f.status}
+              </p>
+              {editingId === f.id ? (
+                <div className="mt-2">
+                  <textarea value={editText} onChange={(e) => setEditText(e.target.value)}
+                    className="w-full text-xs bg-zinc-900 border border-zinc-700 rounded p-2 text-zinc-200" rows={2} />
+                  <div className="flex gap-2 mt-1">
+                    <button disabled={busy === f.id || !editText.trim()}
+                      onClick={() => decideFollowup(f.id, 'approved', editText)}
+                      className="flex-1 text-xs py-1.5 bg-growth-green text-white rounded disabled:opacity-50">Save & approve</button>
+                    <button onClick={() => setEditingId(null)}
+                      className="flex-1 text-xs py-1.5 bg-zinc-700 text-white rounded">Cancel</button>
+                  </div>
+                </div>
+              ) : f.status === 'pending' ? (
+                <div className="flex gap-2 mt-2">
+                  <button disabled={busy === f.id} onClick={() => decideFollowup(f.id, 'approved')}
+                    className="flex-1 text-xs py-1.5 bg-growth-green text-white rounded disabled:opacity-50">Approve</button>
+                  <button disabled={busy === f.id} onClick={() => { setEditingId(f.id); setEditText(f.draft_text); }}
+                    className="flex-1 text-xs py-1.5 bg-zinc-700 hover:bg-zinc-600 text-white rounded disabled:opacity-50">Edit</button>
+                  <button disabled={busy === f.id} onClick={() => decideFollowup(f.id, 'discarded')}
+                    className="flex-1 text-xs py-1.5 bg-zinc-700 hover:bg-red-900/60 text-white rounded disabled:opacity-50">Discard</button>
+                </div>
+              ) : null}
+            </div>
+          ))}
+          <p className="text-[11px] text-zinc-600 mt-1">Approved drafts are only marked ready — nothing is sent anywhere.</p>
         </section>
 
         {/* Verification */}

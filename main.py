@@ -31,6 +31,7 @@ from sentinel_pipeline import process_report_sync
 from meta_service import MetaAPIError
 import briefs as sbriefs
 import contradictions as scontra
+import followups as sfollow
 
 app = FastAPI(title="MIDUSAFE Command Center")
 
@@ -339,6 +340,59 @@ async def get_sentinel_contradictions(incident_id: str, refresh: bool = False):
     sstore.log_audit("contradictions_checked", "incident", incident_id,
                      f"method={method} conflicts={len(report['contradictions'])}")
     return {"report": report, "method": method}
+
+
+@app.post("/api/sentinel/incidents/{incident_id}/followups")
+async def draft_sentinel_followup(incident_id: str):
+    """Generate one follow-up draft in the reporter's language (queued, never sent)."""
+    if not sstore.get_incident(incident_id):
+        raise HTTPException(status_code=404, detail="Incident not found")
+    try:
+        draft, method = sfollow.generate_followup(incident_id)
+    except ValueError as e:
+        raise HTTPException(status_code=404, detail=str(e))
+    if method == "skipped_complete":
+        return {"draft": None, "method": method, "note": draft["note"]}
+    did = sstore.save_followup_draft(incident_id, draft["language"],
+                                     draft["draft_text"])
+    sstore.log_audit("followup_drafted", "followup", did,
+                     f"incident={incident_id} method={method} lang={draft['language']}")
+    drafts = [d for d in sstore.list_followup_drafts(incident_id) if d["id"] == did]
+    return {"draft": drafts[0], "method": method,
+            "note": draft.get("note", "")}
+
+
+@app.get("/api/sentinel/incidents/{incident_id}/followups")
+async def list_sentinel_followups(incident_id: str):
+    if not sstore.get_incident(incident_id):
+        raise HTTPException(status_code=404, detail="Incident not found")
+    return sstore.list_followup_drafts(incident_id)
+
+
+class FollowupDecision(BaseModel):
+    decision: str  # approved | discarded
+    edited_text: Optional[str] = None
+
+
+@app.post("/api/sentinel/followups/{draft_id}/decision")
+async def decide_sentinel_followup(draft_id: str, body: FollowupDecision):
+    """Approve (optionally edited) or discard a draft. Nothing is ever sent."""
+    if body.decision not in ("approved", "discarded"):
+        raise HTTPException(status_code=400, detail="decision must be approved|discarded")
+    drafts = [d for d in sstore.list_followup_drafts() if d["id"] == draft_id]
+    if not drafts:
+        raise HTTPException(status_code=404, detail="Draft not found")
+    if drafts[0]["status"] != "pending":
+        raise HTTPException(status_code=409, detail="Draft already decided")
+    edited = (body.edited_text or "").strip() or None
+    if body.decision == "approved" and edited == "":
+        raise HTTPException(status_code=400, detail="edited text must not be empty")
+    sstore.decide_followup_draft(draft_id, body.decision, edited)
+    sstore.log_audit(f"followup_{body.decision}", "followup", draft_id,
+                     f"edited={bool(edited)} incident={drafts[0]['incident_id']}")
+    updated = [d for d in sstore.list_followup_drafts() if d["id"] == draft_id][0]
+    return {"draft": updated, "status": "approved, ready to send"
+            if body.decision == "approved" else "discarded"}
 
 
 @app.get("/api/sentinel/duplicates")
