@@ -31,10 +31,10 @@ export default function SentinelStatsBar({ stats }: { stats: SentinelStats | nul
   const topCats = Object.entries(stats.by_category).sort((a, b) => b[1] - a[1]).slice(0, 3);
   return (
     <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
-      <Card icon={<Flame className="h-4 w-4" />} label="Total incidents" value={stats.total} accent="text-sky-400 border-sky-500/50" />
-      <Card icon={<Clock className="h-4 w-4" />} label="Awaiting verification" value={stats.pending_verification} accent="text-yellow-400 border-yellow-500/50" />
-      <Card icon={<AlertTriangle className="h-4 w-4" />} label="High priority" value={stats.high_priority} accent="text-rose-400 border-rose-500/50" />
-      <Card icon={<Copy className="h-4 w-4" />} label="Possible duplicates" value={stats.possible_duplicates} accent="text-violet-400 border-violet-500/50" />
+      <Card icon={<Flame className="h-4 w-4" />} label="Total" value={stats.total} accent="text-sky-400 border-sky-500/50" />
+      <Card icon={<Clock className="h-4 w-4" />} label="Awaiting" value={stats.pending_verification} accent="text-yellow-400 border-yellow-500/50" />
+      <Card icon={<AlertTriangle className="h-4 w-4" />} label="High prio" value={stats.high_priority} accent="text-rose-400 border-rose-500/50" />
+      <Card icon={<Copy className="h-4 w-4" />} label="Duplicates" value={stats.possible_duplicates} accent="text-violet-400 border-violet-500/50" />
       <div className="glass-card rounded-lg px-4 py-3 min-w-0">
         <div className="flex items-center gap-2 text-emerald-400">
           <CheckCircle2 className="h-4 w-4" />

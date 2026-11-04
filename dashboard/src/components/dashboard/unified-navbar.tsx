@@ -78,8 +78,11 @@ export default function UnifiedNavbar({ selectedLanguage, onLanguageChange }: Un
           </div>
         </div>
 
-        {/* Center: Climate Metrics Strip */}
+        {/* Center: Climate Metrics Strip (hardcoded demo values, not live data) */}
         <div className="flex items-center gap-6">
+          <span className="text-[10px] font-medium text-zinc-500 bg-zinc-800/60 border border-zinc-700/60 px-1.5 py-0.5 rounded" title="These figures are static demo placeholders, not live measurements">
+            demo values
+          </span>
           {climateMetrics.map((metric) => (
             <div key={metric.label} className="flex items-center gap-2">
               {metric.icon}

@@ -110,6 +110,7 @@ export default function DashboardPage() {
                   : 'bg-zinc-900/50 border-zinc-800 text-zinc-400 hover:text-zinc-200'
               }`}
             >
+              <span className="text-[10px] text-zinc-500 border border-zinc-700 rounded px-1 mr-1">Legacy</span>
               Live Alerts ({alerts.length})
             </button>
           </div>
