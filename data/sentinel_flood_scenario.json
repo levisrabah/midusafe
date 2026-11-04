@@ -41,6 +41,16 @@
       "message": "Tangu asubuhi maji yamekuwa yakipanda hapa Mathare. Saa hizi daraja la miguu limefunikwa kabisa na watu hawawezi kuvuka.",
       "location_hint": "",
       "note": "Swahili with time reference, likely duplicate of reports 1-2"
+    },
+    {
+      "message": "The Mathare footbridge is completely impassable, water is flowing over it and nobody can cross to the other side.",
+      "location_hint": "Mathare",
+      "note": "FICTIONAL contradiction pair (a): footbridge impassable"
+    },
+    {
+      "message": "Just crossed the Mathare footbridge on foot, it is passable if you are careful. Water has gone down since morning.",
+      "location_hint": "Mathare",
+      "note": "FICTIONAL contradiction pair (b): footbridge passable - conflicts with previous report"
     }
   ]
 }
