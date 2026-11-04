@@ -99,6 +99,33 @@ Baseline: commit tagged `pre-hackathon`. Everything below is new hackathon work.
 - Verified from fresh /tmp venv: install OK (no google pkgs), 19/19 pytest, backend serves
   both paths, `seed_demo.py --reset` 8/8 (seed now uses `sys.executable`)
 
+## New in final polish
+- Block 1: Leaflet basemap already keyless OSM + attribution (commit 3055b5d;
+  verified no carto/keyed tiles remain). Navbar climate figures labelled
+  "demo values" (honest: hardcoded placeholders, not live data). Stat-card
+  labels shortened (Total/Awaiting/High prio/Duplicates). "Live Alerts" tab
+  tagged "Legacy" (Sentinel Intel stays default).
+- Block 2a: CONTRADICTION DETECTION (`contradictions.py`): per-cluster Meta
+  check over linked reports, Pydantic-validated, unknown cited ids rejected
+  (-> empty fallback, never fabricated). `GET .../contradictions` (+cache).
+  UI "Conflicting reports" panel: two claims + cited report ids + "verify on
+  the ground". 4 pytest. Live: footbridge pair -> 3 conflicts, all real ids.
+- Block 2b: FOLLOW-UP DRAFTS (`followups.py`): one short question in the
+  reporter's detected language (sw/sh/en), language-validated; approval queue
+  UI with Approve/Edit/Discard; approved = "approved, ready to send", nothing
+  sent anywhere; every action audit-logged. 3 pytest. Live: Swahili draft
+  generated and approved end to end.
+- Block 2c: META AI TRACE: `ai_trace` table records model, measured latency,
+  validation pass/fail for voice_transcribe, extraction, brief,
+  contradiction_check, followup_draft; voice trace links to its incident via
+  trace_id on submit. Collapsible per-incident panel, real values only.
+  3 pytest. Live: extraction row showed muse-spark-1.3 / 10.6s / valid.
+- Block 3: seed scenario now 10 fictional reports incl. a labelled
+  footbridge passable/impassable contradiction pair. Full suite 29/29 green,
+  `npm run build` green, reseed 10/10 live + contradictions/followup/brief/
+  trace/approve/audit all confirmed against the real Meta API.
+- Not printed or committed: META_API_KEY (server-side `.env` only, gitignored).
+
 ## Known limitations
 - Gazetteer is Kenya-demo-scoped (~25 places); unlisted places stay unresolved by design
 - Languages tested live: English, Swahili, Sheng only; no broader coverage claimed
