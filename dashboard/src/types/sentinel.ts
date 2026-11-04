@@ -66,6 +66,21 @@ export interface SentinelStats {
   by_category: Record<string, number>;
 }
 
+export interface ContradictionClaim {
+  topic: string;
+  claim_a: string;
+  report_id_a: string;
+  claim_b: string;
+  report_id_b: string;
+}
+
+export interface ContradictionReport {
+  incident_id: string;
+  contradictions: ContradictionClaim[];
+  checked_at: string;
+  note: string;
+}
+
 export interface AuditEntry {
   id: string;
   timestamp: string;

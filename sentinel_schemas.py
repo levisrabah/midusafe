@@ -180,3 +180,53 @@ class AuditEntry(BaseModel):
     target_type: str
     target_id: str
     detail: str = ""
+
+
+class ContradictionClaim(BaseModel):
+    """Two conflicting claims from two cited source reports."""
+
+    topic: str
+    claim_a: str
+    report_id_a: str
+    claim_b: str
+    report_id_b: str
+
+
+class ContradictionReport(BaseModel):
+    incident_id: str
+    contradictions: List[ContradictionClaim] = Field(default_factory=list)
+    checked_at: str
+    note: str = ""
+
+
+CONTRADICTION_JSON_SCHEMA = {
+    "type": "object",
+    "properties": {
+        "contradictions": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "properties": {
+                    "topic": {"type": "string"},
+                    "claim_a": {"type": "string"},
+                    "report_id_a": {"type": "string"},
+                    "claim_b": {"type": "string"},
+                    "report_id_b": {"type": "string"},
+                },
+                "required": ["topic", "claim_a", "report_id_a",
+                             "claim_b", "report_id_b"],
+                "additionalProperties": False,
+            },
+        },
+    },
+    "required": ["contradictions"],
+    "additionalProperties": False,
+}
+
+CONTRADICTION_SYSTEM_PROMPT = """You compare emergency reports about the same incident cluster and flag CONFLICTING factual claims.
+
+STRICT RULES:
+1. Only flag genuine contradictions (e.g. one report says the footbridge is passable, another says it is impassable). Differences in detail or wording are NOT contradictions.
+2. Each contradiction must cite the two source report ids it comes from, using ONLY ids from the provided reports. Never cite an id you were not given.
+3. Quote each claim faithfully in a few words. If there are no contradictions, return an empty list.
+4. Never invent facts, and never resolve the conflict yourself - a human verifies on the ground."""

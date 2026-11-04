@@ -22,6 +22,10 @@ export const sentinelApi = {
     req<{ brief: import('@/types/sentinel').IntelBrief; method: string }>(
       `/api/sentinel/incidents/${id}/brief${refresh ? '?refresh=true' : ''}`
     ),
+  getContradictions: (id: string, refresh = false) =>
+    req<{ report: import('@/types/sentinel').ContradictionReport; method: string }>(
+      `/api/sentinel/incidents/${id}/contradictions${refresh ? '?refresh=true' : ''}`
+    ),
   listDuplicates: (status?: string) =>
     req<import('@/types/sentinel').DupLink[]>(
       `/api/sentinel/duplicates${status ? `?status=${status}` : ''}`

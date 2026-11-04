@@ -30,6 +30,7 @@ from sentinel_schemas import ReportIn
 from sentinel_pipeline import process_report_sync
 from meta_service import MetaAPIError
 import briefs as sbriefs
+import contradictions as scontra
 
 app = FastAPI(title="MIDUSAFE Command Center")
 
@@ -320,6 +321,24 @@ async def get_sentinel_brief(incident_id: str, refresh: bool = False):
     sstore.save_brief(incident_id, brief)
     sstore.log_audit("brief_generated", "incident", incident_id, f"method={method}")
     return {"brief": brief, "method": method}
+
+
+@app.get("/api/sentinel/incidents/{incident_id}/contradictions")
+async def get_sentinel_contradictions(incident_id: str, refresh: bool = False):
+    if not sstore.get_incident(incident_id):
+        raise HTTPException(status_code=404, detail="Incident not found")
+    if not refresh:
+        cached = sstore.get_contradictions(incident_id)
+        if cached:
+            return {"report": cached, "method": "cached"}
+    try:
+        report, method = scontra.generate_contradictions(incident_id)
+    except ValueError as e:
+        raise HTTPException(status_code=404, detail=str(e))
+    sstore.save_contradictions(incident_id, report)
+    sstore.log_audit("contradictions_checked", "incident", incident_id,
+                     f"method={method} conflicts={len(report['contradictions'])}")
+    return {"report": report, "method": method}
 
 
 @app.get("/api/sentinel/duplicates")

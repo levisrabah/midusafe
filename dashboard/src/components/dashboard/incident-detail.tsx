@@ -2,9 +2,9 @@
 
 import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
-import { Brain, Check, Copy, FileText, History, MapPin, ShieldCheck, X } from 'lucide-react';
+import { AlertTriangle, Brain, Check, Copy, FileText, History, MapPin, ShieldCheck, X } from 'lucide-react';
 import { sentinelApi } from '@/lib/sentinel-api';
-import { AuditEntry, DupLink, IntelBrief, SentinelIncident } from '@/types/sentinel';
+import { AuditEntry, ContradictionReport, DupLink, IntelBrief, SentinelIncident } from '@/types/sentinel';
 
 export default function IncidentDetail({
   incident, duplicates, onClose, onChanged,
@@ -17,6 +17,9 @@ export default function IncidentDetail({
   const [brief, setBrief] = useState<IntelBrief | null>(null);
   const [briefMethod, setBriefMethod] = useState<string>('');
   const [briefLoading, setBriefLoading] = useState(false);
+  const [contra, setContra] = useState<ContradictionReport | null>(null);
+  const [contraMethod, setContraMethod] = useState<string>('');
+  const [contraLoading, setContraLoading] = useState(false);
   const [audit, setAudit] = useState<AuditEntry[]>([]);
   const [busy, setBusy] = useState<string | null>(null);
   const [note, setNote] = useState('');
@@ -31,6 +34,8 @@ export default function IncidentDetail({
   useEffect(() => {
     setBrief(null);
     setBriefMethod('');
+    setContra(null);
+    setContraMethod('');
     setNote('');
     setReclass(incident.extraction.incident_type);
     sentinelApi.audit().then((a) =>
@@ -48,6 +53,19 @@ export default function IncidentDetail({
       setBrief(null);
     } finally {
       setBriefLoading(false);
+    }
+  };
+
+  const loadContra = async (refresh = false) => {
+    setContraLoading(true);
+    try {
+      const res = await sentinelApi.getContradictions(incident.id, refresh);
+      setContra(res.report);
+      setContraMethod(res.method);
+    } catch {
+      setContra(null);
+    } finally {
+      setContraLoading(false);
     }
   };
 
@@ -164,6 +182,36 @@ export default function IncidentDetail({
               )}
             </div>
           ))}
+        </section>
+
+        {/* Conflicting reports */}
+        <section className="glass-card rounded-lg p-3">
+          <h4 className="text-xs font-semibold text-zinc-400 mb-2 flex items-center gap-1">
+            <AlertTriangle className="h-3 w-3" /> CONFLICTING REPORTS {contraMethod && <span className="text-zinc-600">({contraMethod})</span>}
+          </h4>
+          {!contra && (
+            <button onClick={() => loadContra()} disabled={contraLoading}
+              className="w-full text-sm py-2 bg-amber-600/80 hover:bg-amber-600 disabled:opacity-50 text-white rounded-lg flex items-center justify-center gap-2">
+              {contraLoading ? 'Checking…' : 'Check for conflicts'}
+            </button>
+          )}
+          {contra && contra.contradictions.length === 0 && (
+            <p className="text-xs text-zinc-500">{contra.note || 'No conflicts found between reports.'}</p>
+          )}
+          {contra && contra.contradictions.map((c, i) => (
+            <div key={i} className="bg-zinc-900/60 rounded p-2 mb-2">
+              <p className="text-xs font-semibold text-amber-300 capitalize">{c.topic}</p>
+              <p className="text-xs text-zinc-300 mt-1">“{c.claim_a}” <span className="text-zinc-500 font-mono">[{c.report_id_a.slice(0, 10)}]</span></p>
+              <p className="text-[11px] text-zinc-600 my-0.5">conflicts with</p>
+              <p className="text-xs text-zinc-300">“{c.claim_b}” <span className="text-zinc-500 font-mono">[{c.report_id_b.slice(0, 10)}]</span></p>
+              <p className="text-[11px] text-amber-300/80 mt-1">⚠ Verify on the ground before acting.</p>
+            </div>
+          ))}
+          {contra && (
+            <button onClick={() => loadContra(true)} disabled={contraLoading} className="text-zinc-500 hover:text-zinc-300 text-xs">
+              Re-check
+            </button>
+          )}
         </section>
 
         {/* Brief */}

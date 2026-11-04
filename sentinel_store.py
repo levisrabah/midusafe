@@ -58,6 +58,30 @@ CREATE TABLE IF NOT EXISTS briefs (
     brief TEXT NOT NULL,
     created_at TEXT NOT NULL
 );
+CREATE TABLE IF NOT EXISTS contradictions (
+    incident_id TEXT PRIMARY KEY,
+    report TEXT NOT NULL,
+    created_at TEXT NOT NULL
+);
+CREATE TABLE IF NOT EXISTS ai_trace (
+    id TEXT PRIMARY KEY,
+    incident_id TEXT,
+    step TEXT NOT NULL,
+    model TEXT NOT NULL,
+    latency_ms INTEGER NOT NULL,
+    validation_passed INTEGER NOT NULL,
+    detail TEXT NOT NULL DEFAULT '',
+    created_at TEXT NOT NULL
+);
+CREATE TABLE IF NOT EXISTS followup_drafts (
+    id TEXT PRIMARY KEY,
+    incident_id TEXT NOT NULL,
+    language TEXT NOT NULL,
+    draft_text TEXT NOT NULL,
+    status TEXT NOT NULL DEFAULT 'pending',
+    created_at TEXT NOT NULL,
+    decided_at TEXT
+);
 """
 
 
@@ -249,6 +273,104 @@ def get_brief(incident_id):
         row = conn.execute(
             "SELECT brief FROM briefs WHERE incident_id = ?", (incident_id,)).fetchone()
     return json.loads(row["brief"]) if row else None
+
+
+# ---- contradictions cache ----
+
+def save_contradictions(incident_id, report: dict):
+    init_db()
+    with _lock, _connect() as conn:
+        conn.execute(
+            "INSERT OR REPLACE INTO contradictions (incident_id, report, created_at)"
+            " VALUES (?, ?, ?)",
+            (incident_id, json.dumps(report), now_iso()),
+        )
+
+
+def get_contradictions(incident_id):
+    init_db()
+    with _connect() as conn:
+        row = conn.execute(
+            "SELECT report FROM contradictions WHERE incident_id = ?",
+            (incident_id,)).fetchone()
+    return json.loads(row["report"]) if row else None
+
+
+# ---- Meta AI trace (real measured values only) ----
+
+def log_trace(incident_id, step, model, latency_ms, validation_passed,
+              detail=""):
+    init_db()
+    tid = new_id("trc_")
+    with _lock, _connect() as conn:
+        conn.execute(
+            "INSERT INTO ai_trace (id, incident_id, step, model, latency_ms,"
+            " validation_passed, detail, created_at)"
+            " VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
+            (tid, incident_id, step, model, int(latency_ms),
+             int(bool(validation_passed)), detail or "", now_iso()),
+        )
+    return tid
+
+
+def list_trace(incident_id, limit=50):
+    init_db()
+    with _connect() as conn:
+        rows = conn.execute(
+            "SELECT * FROM ai_trace WHERE incident_id = ?"
+            " ORDER BY created_at ASC LIMIT ?", (incident_id, limit)).fetchall()
+    return [dict(r) for r in rows]
+
+
+# ---- follow-up drafts (approval queue; nothing is ever auto-sent) ----
+
+def save_followup_draft(incident_id, language, draft_text, draft_id=None):
+    init_db()
+    did = draft_id or new_id("fup_")
+    with _lock, _connect() as conn:
+        conn.execute(
+            "INSERT OR REPLACE INTO followup_drafts (id, incident_id, language,"
+            " draft_text, status, created_at)"
+            " VALUES (?, ?, ?, ?, 'pending', ?)",
+            (did, incident_id, language, draft_text, now_iso()),
+        )
+    return did
+
+
+def list_followup_drafts(incident_id=None, status=None):
+    init_db()
+    q = "SELECT * FROM followup_drafts"
+    clauses, params = [], []
+    if incident_id:
+        clauses.append("incident_id = ?")
+        params.append(incident_id)
+    if status:
+        clauses.append("status = ?")
+        params.append(status)
+    if clauses:
+        q += " WHERE " + " AND ".join(clauses)
+    q += " ORDER BY created_at DESC"
+    with _connect() as conn:
+        rows = conn.execute(q, params).fetchall()
+    return [dict(r) for r in rows]
+
+
+def decide_followup_draft(draft_id, decision, edited_text=None):
+    assert decision in ("approved", "discarded")
+    init_db()
+    with _lock, _connect() as conn:
+        if edited_text is not None:
+            conn.execute(
+                "UPDATE followup_drafts SET draft_text = ?, status = ?,"
+                " decided_at = ? WHERE id = ?",
+                (edited_text, decision, now_iso(), draft_id),
+            )
+        else:
+            conn.execute(
+                "UPDATE followup_drafts SET status = ?, decided_at = ? WHERE id = ?",
+                (decision, now_iso(), draft_id),
+            )
+    return True
 
 
 def stats():
