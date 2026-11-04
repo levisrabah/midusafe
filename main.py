@@ -263,10 +263,12 @@ def _sentinel_broadcast(incident: dict, candidates: list):
     }
 
 
-async def _process_sentinel_background(message: str, location_hint, is_simulated: bool):
+async def _process_sentinel_background(message: str, location_hint, is_simulated: bool,
+                                       voice_trace_id=None):
     try:
         incident, candidates = process_report_sync(
-            message, location_hint, is_simulated=is_simulated)
+            message, location_hint, is_simulated=is_simulated,
+            voice_trace_id=voice_trace_id)
         await manager.broadcast(_sentinel_broadcast(incident, candidates))
         print(f"📡 Sentinel incident {incident['id']} broadcasted "
               f"({len(candidates)} dup candidates)")
@@ -283,7 +285,8 @@ async def submit_sentinel_report(report: ReportIn, background_tasks: BackgroundT
         try:
             incident, candidates = process_report_sync(
                 report.message, report.location_hint,
-                is_simulated=report.is_simulated)
+                is_simulated=report.is_simulated,
+                voice_trace_id=report.voice_trace_id)
         except MetaAPIError as e:
             raise HTTPException(status_code=502, detail=str(e))
         except ValueError as e:
@@ -292,7 +295,8 @@ async def submit_sentinel_report(report: ReportIn, background_tasks: BackgroundT
         return {"status": "processed", "incident": incident,
                 "duplicate_candidates": candidates}
     background_tasks.add_task(_process_sentinel_background, report.message,
-                              report.location_hint, report.is_simulated)
+                              report.location_hint, report.is_simulated,
+                              report.voice_trace_id)
     return {"status": "accepted", "message": "Report queued for Meta AI processing"}
 
 
@@ -454,6 +458,14 @@ async def verify_sentinel_incident(incident_id: str, body: VerificationAction):
             "incident": sstore.get_incident(incident_id)}
 
 
+@app.get("/api/sentinel/incidents/{incident_id}/trace")
+async def get_sentinel_trace(incident_id: str):
+    """Meta AI trace: real measured model/latency/validation per step."""
+    if not sstore.get_incident(incident_id):
+        raise HTTPException(status_code=404, detail="Incident not found")
+    return sstore.list_trace(incident_id)
+
+
 @app.get("/api/sentinel/stats")
 async def sentinel_stats():
     return sstore.stats()
@@ -515,17 +527,25 @@ async def transcribe_voice_report(audio: UploadFile = File(...),
             except OSError:
                 pass
     bias = [b.strip() for b in language_bias.split(",")] if language_bias else None
+    t0 = time.perf_counter()
     try:
         result = meta_service.transcribe_file(wav_bytes, filename="voice_report.wav",
                                               language_bias=bias)
     except MetaAPIError as e:
+        sstore.log_trace(None, "voice_transcribe", "muse-voice-transcribe-1.0",
+                         (time.perf_counter() - t0) * 1000, False, str(e)[:200])
         raise HTTPException(status_code=502, detail=f"Transcription failed: {e}")
     transcript = (result.get("transcript") or "").strip()
+    trace_id = sstore.log_trace(
+        None, "voice_transcribe", "muse-voice-transcribe-1.0",
+        (time.perf_counter() - t0) * 1000, bool(transcript),
+        f"{len(transcript)} chars")
     if not transcript:
         return {"transcript": "", "duration_ms": result.get("audioDurationMs", 0),
+                "trace_id": trace_id,
                 "warning": "No speech detected in the recording."}
     return {"transcript": transcript, "duration_ms": result.get("audioDurationMs", 0),
-            "turns": result.get("turns", [])}
+            "trace_id": trace_id, "turns": result.get("turns", [])}
 
 if __name__ == "__main__":
     import uvicorn

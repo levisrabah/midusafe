@@ -2,9 +2,9 @@
 
 import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
-import { AlertTriangle, Brain, Check, Copy, FileText, History, MapPin, ShieldCheck, X } from 'lucide-react';
+import { AlertTriangle, Brain, Check, ChevronDown, Copy, FileText, History, MapPin, ShieldCheck, X } from 'lucide-react';
 import { sentinelApi } from '@/lib/sentinel-api';
-import { AuditEntry, ContradictionReport, DupLink, FollowupDraft, IntelBrief, SentinelIncident } from '@/types/sentinel';
+import { AiTraceEntry, AuditEntry, ContradictionReport, DupLink, FollowupDraft, IntelBrief, SentinelIncident } from '@/types/sentinel';
 
 export default function IncidentDetail({
   incident, duplicates, onClose, onChanged,
@@ -25,6 +25,8 @@ export default function IncidentDetail({
   const [followupNote, setFollowupNote] = useState('');
   const [editingId, setEditingId] = useState<string | null>(null);
   const [editText, setEditText] = useState('');
+  const [trace, setTrace] = useState<AiTraceEntry[] | null>(null);
+  const [traceOpen, setTraceOpen] = useState(false);
   const [audit, setAudit] = useState<AuditEntry[]>([]);
   const [busy, setBusy] = useState<string | null>(null);
   const [note, setNote] = useState('');
@@ -44,6 +46,8 @@ export default function IncidentDetail({
     setFollowups([]);
     setFollowupNote('');
     setEditingId(null);
+    setTrace(null);
+    setTraceOpen(false);
     sentinelApi.listFollowups(incident.id).then(setFollowups).catch(() => setFollowups([]));
     setNote('');
     setReclass(incident.extraction.incident_type);
@@ -104,6 +108,18 @@ export default function IncidentDetail({
       onChanged();
     } finally {
       setBusy(null);
+    }
+  };
+
+  const toggleTrace = async () => {
+    const next = !traceOpen;
+    setTraceOpen(next);
+    if (next && trace === null) {
+      try {
+        setTrace(await sentinelApi.getTrace(incident.id));
+      } catch {
+        setTrace([]);
+      }
     }
   };
 
@@ -373,6 +389,33 @@ export default function IncidentDetail({
           <p>{ex.missing_information.join('; ') || '—'}</p>
           <p className="text-zinc-500 font-semibold mt-2 mb-1">FOLLOW-UP QUESTIONS</p>
           <p>{ex.follow_up_questions.join(' ') || '—'}</p>
+        </section>
+
+        {/* Meta AI trace (real measured values) */}
+        <section className="glass-card rounded-lg p-3">
+          <button onClick={toggleTrace} className="w-full flex items-center justify-between">
+            <h4 className="text-xs font-semibold text-zinc-400 flex items-center gap-1">
+              <Brain className="h-3 w-3" /> META AI TRACE
+            </h4>
+            <ChevronDown className={`h-4 w-4 text-zinc-500 transition-transform ${traceOpen ? 'rotate-180' : ''}`} />
+          </button>
+          {traceOpen && (
+            <div className="mt-2">
+              {trace === null && <p className="text-xs text-zinc-600">Loading…</p>}
+              {trace !== null && trace.length === 0 && <p className="text-xs text-zinc-600">No AI steps recorded yet.</p>}
+              {trace !== null && trace.map((t) => (
+                <p key={t.id} className="text-[11px] text-zinc-500 font-mono">
+                  {t.step} · {t.model} · {(t.latency_ms / 1000).toFixed(1)}s ·{' '}
+                  {t.validation_passed ? (
+                    <span className="text-emerald-400">valid ✓</span>
+                  ) : (
+                    <span className="text-amber-300">failed ✗</span>
+                  )}
+                  {t.detail ? ` · ${t.detail.slice(0, 50)}` : ''}
+                </p>
+              ))}
+            </div>
+          )}
         </section>
 
         {/* Audit */}

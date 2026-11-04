@@ -91,6 +91,17 @@ export interface FollowupDraft {
   decided_at: string | null;
 }
 
+export interface AiTraceEntry {
+  id: string;
+  incident_id: string | null;
+  step: string;
+  model: string;
+  latency_ms: number;
+  validation_passed: number | boolean;
+  detail: string;
+  created_at: string;
+}
+
 export interface AuditEntry {
   id: string;
   timestamp: string;

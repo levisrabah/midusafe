@@ -51,6 +51,8 @@ export const sentinelApi = {
       `/api/sentinel/incidents/${id}/verify`,
       { method: 'POST', body: JSON.stringify({ action, value }) }
     ),
+  getTrace: (id: string) =>
+    req<import('@/types/sentinel').AiTraceEntry[]>(`/api/sentinel/incidents/${id}/trace`),
   stats: () => req<import('@/types/sentinel').SentinelStats>('/api/sentinel/stats'),
   audit: () => req<import('@/types/sentinel').AuditEntry[]>('/api/sentinel/audit'),
   submitReport: (message: string, location_hint?: string) =>

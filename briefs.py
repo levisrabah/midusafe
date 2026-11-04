@@ -6,11 +6,13 @@ only quotes stored evidence - never model prose without sources.
 """
 
 import json
+import time
 
 from meta_service import MetaAPIError, meta_service
 from sentinel_schemas import (BRIEF_JSON_SCHEMA, BRIEF_SYSTEM_PROMPT,
                               IntelligenceBrief)
-from sentinel_store import get_incident, get_report, list_audit, now_iso
+from sentinel_store import (get_incident, get_report, list_audit, log_trace,
+                            now_iso)
 
 BANNED_MEDICAL_PHRASES = (
     "take aspirin", "take ibuprofen", "take antibiotics", "prescribe",
@@ -88,6 +90,8 @@ def generate_brief(incident_id, service=None):
     linked = _linked_incidents(incident_id)
     prompt, valid_ids = build_brief_context(incident, linked)
 
+    model = getattr(service, "model", "stub")
+    t0 = time.perf_counter()
     try:
         data = service.chat(
             messages=[{"role": "system", "content": BRIEF_SYSTEM_PROMPT},
@@ -106,8 +110,13 @@ def generate_brief(incident_id, service=None):
             raise ValueError("brief contained medical advice; rejected")
         brief = IntelligenceBrief(incident_id=incident_id,
                                   generated_at=now_iso(), **brief_raw)
+        log_trace(incident_id, "brief", model,
+                  (time.perf_counter() - t0) * 1000, True,
+                  f"{len(brief.evidence)} cited claim(s)")
         return brief.model_dump(), "meta"
     except (MetaAPIError, ValueError, json.JSONDecodeError) as e:
+        log_trace(incident_id, "brief", model,
+                  (time.perf_counter() - t0) * 1000, False, str(e)[:200])
         return _fallback_brief(incident, linked, str(e)[:120]), "fallback"
 
 

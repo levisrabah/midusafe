@@ -313,6 +313,15 @@ def log_trace(incident_id, step, model, latency_ms, validation_passed,
     return tid
 
 
+def claim_trace(trace_id, incident_id):
+    """Link an incident-less trace row (e.g. voice) to its incident."""
+    init_db()
+    with _lock, _connect() as conn:
+        conn.execute("UPDATE ai_trace SET incident_id = ? WHERE id = ?",
+                     (incident_id, trace_id))
+    return True
+
+
 def list_trace(incident_id, limit=50):
     init_db()
     with _connect() as conn:

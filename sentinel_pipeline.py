@@ -6,6 +6,7 @@ deterministic results; main.py runs it in a background task by default.
 
 import json
 import logging
+import time
 
 from pydantic import ValidationError
 
@@ -44,10 +45,19 @@ def extract_with_meta(message, location_hint=None, service=None):
 
 
 def process_report_sync(message, location_hint=None, is_simulated=False,
-                        service=None):
+                        service=None, voice_trace_id=None):
     """Full pipeline for one report. Returns stored incident dict + dup candidates."""
     service = service or meta_service
-    extraction = extract_with_meta(message, location_hint, service=service)
+    model = getattr(service, "model", "stub")
+    t0 = time.perf_counter()
+    try:
+        extraction = extract_with_meta(message, location_hint, service=service)
+    except ValueError as e:
+        # No incident exists yet; record the failed extraction unlinked.
+        store.log_trace(None, "extraction", model,
+                        (time.perf_counter() - t0) * 1000, False, str(e)[:200])
+        raise
+    latency_ms = (time.perf_counter() - t0) * 1000
 
     display, lat, lng, resolved = gazetteer.resolve_from_parts(
         location_hint, extraction.location_mentioned, message)
@@ -63,6 +73,10 @@ def process_report_sync(message, location_hint=None, is_simulated=False,
                     f"type={extraction.incident_type} lang={extraction.detected_language} "
                     f"resolved={resolved} simulated={bool(is_simulated)}",
                     actor="system")
+    store.log_trace(incident_id, "extraction", model, latency_ms, True,
+                    f"type={extraction.incident_type} lang={extraction.detected_language}")
+    if voice_trace_id:
+        store.claim_trace(voice_trace_id, incident_id)
 
     incident = store.get_incident(incident_id)
     candidates = dup.find_candidates(incident, store.list_incidents(limit=500))

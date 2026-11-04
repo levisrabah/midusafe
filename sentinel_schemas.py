@@ -92,6 +92,7 @@ class ReportIn(BaseModel):
     message: str = Field(min_length=1, max_length=4000)
     location_hint: Optional[str] = Field(default=None, max_length=200)
     is_simulated: bool = False
+    voice_trace_id: Optional[str] = Field(default=None, max_length=64)
 
 
 class IncidentOut(BaseModel):

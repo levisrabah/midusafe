@@ -94,6 +94,7 @@ export default function CommunityReportButton() {
   
   const [isTranscribing, setIsTranscribing] = useState(false);
   const [transcribeError, setTranscribeError] = useState('');
+  const [voiceTraceId, setVoiceTraceId] = useState<string | null>(null);
 
   const transcribeAudio = async (audioBlob: Blob) => {
     // Real transcription via backend -> Meta Voice Transcribe.
@@ -119,6 +120,7 @@ export default function CommunityReportButton() {
       }
       setTranscript(text);
       setReportText(text);
+      setVoiceTraceId(data.trace_id || null);
     } catch (error) {
       console.error('Transcription failed:', error);
       setTranscribeError(`Transcription failed (${error instanceof Error ? error.message : 'network error'}). You can still type your report.`);
@@ -158,12 +160,14 @@ export default function CommunityReportButton() {
           message: reportText,
           location_hint: location || null,
           is_simulated: false,
+          voice_trace_id: voiceTraceId,
         }),
       });
 
       if (response.ok) {
         setReportText('');
         setLocation('');
+        setVoiceTraceId(null);
         setIsModalOpen(false);
       } else {
         console.error('Failed to submit report');
