@@ -1,5 +1,7 @@
 # MIDUSAFE SENTINEL
 
+**Demo video (3 min):** https://youtu.be/jPTWLEuq3po
+
 ### Turning community reports into actionable disaster intelligence.
 
 Built for the **Meta Global AI Developer Hackathon 2026**. Sentinel takes fragmented
